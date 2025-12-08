@@ -78,11 +78,11 @@ export default async function BlogPostPage({
           <p className="text-sm uppercase tracking-[0.14em] text-[var(--muted)]">
             {formatDate(post.date)}
           </p>
-          <h1 className="font-serif text-4xl font-semibold leading-tight text-[var(--ink)] sm:text-5xl">
+          <h1 className="font-sans text-4xl font-extrabold leading-tight text-[var(--ink)] sm:text-5xl">
             {post.title}
           </h1>
           {post.description && (
-            <p className="text-lg text-[var(--muted)]">{post.description}</p>
+            <p className="text-base text-[var(--muted)]">{post.description}</p>
           )}
           <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--muted)]">
             {post.readMinutes ? <span>{post.readMinutes} min read</span> : null}

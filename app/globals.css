@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f9f7f3;
+  /* DEV.to-inspired palette */
+  --bg: #f6f6f6;
   --panel: #ffffff;
-  --ink: #1b1b18;
-  --muted: #5b574f;
-  --accent: #0f8b8d;
-  --accent-soft: #e7f4f4;
+  --ink: #171717;
+  --muted: #717171;
+  --accent: #3b49df;
+  --accent-soft: #eef0ff;
+  --border: rgba(23, 23, 23, 0.06);
 }
 
 @theme inline {
@@ -23,8 +25,9 @@
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-ui), system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", var(--font-ui), sans-serif;
   letter-spacing: 0;
+  font-size: 16px;
 }
 
 a {
@@ -33,7 +36,7 @@ a {
 }
 
 ::selection {
-  background: rgba(15, 139, 141, 0.1);
+  background: rgba(59, 73, 223, 0.16);
   color: var(--ink);
 }
 
@@ -42,40 +45,47 @@ h1,
 h2,
 h3,
 h4 {
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  font-weight: 800;
+  color: var(--ink);
 }
 
 p {
   color: var(--muted);
+  font-size: 15px;
+  line-height: 1.65;
 }
 
 .prose {
   color: var(--ink);
   max-width: 70ch;
+  font-family: system-ui, -apple-system, "Segoe UI", var(--font-ui), sans-serif;
+  line-height: 1.6;
 }
 
 .prose h1,
 .prose h2,
 .prose h3 {
-  font-family: var(--font-serif), "Source Serif 4", Georgia, serif;
-  font-weight: 700;
+  font-family: system-ui, -apple-system, "Segoe UI", var(--font-ui), sans-serif;
+  font-weight: 800;
   color: var(--ink);
-  margin-top: 1.6em;
+  margin-top: 1.4em;
   margin-bottom: 0.6em;
 }
 
 .prose p {
   color: var(--muted);
-  font-size: 18px;
-  line-height: 1.8;
+  font-size: 15px;
+  line-height: 1.65;
   margin-top: 0.9em;
   margin-bottom: 0.9em;
 }
 
 .prose a {
+  color: var(--accent);
   text-decoration: underline;
   text-decoration-thickness: 1.5px;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
 }
 
 .prose blockquote {
@@ -85,18 +95,92 @@ p {
 }
 
 .prose code {
-  background: #f1ede5;
-  padding: 0.15em 0.35em;
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  padding: 0.15em 0.5em;
+  border-radius: 6px;
   font-size: 0.95em;
-  color: #2d2a24;
+  color: var(--ink);
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
 
 .prose pre {
-  background: #f1ede5;
+  background: #0a0c10;
+  color: #e8e9ed;
   padding: 1.1em 1em;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.95em;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.prose pre code {
+  display: block;
+  overflow-x: auto;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.hljs {
+  color: #e8e9ed;
+  background: transparent;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #9ca3af;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+  color: #c084fc;
+}
+
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst,
+.hljs-literal {
+  color: #fca5a5;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta-string {
+  color: #7ee0d2;
+}
+
+.hljs-built_in,
+.hljs-class .hljs-title,
+.hljs-number,
+.hljs-type,
+.hljs-title {
+  color: #fcd34d;
+}
+
+.hljs-variable,
+.hljs-template-variable,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link {
+  color: #93c5fd;
+}
+
+.hljs-meta,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #fbbf24;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 700;
 }
 
 .prose ul,
@@ -112,19 +196,22 @@ p {
 
 .flat-card {
   background: var(--panel);
-  border-radius: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 0 1px rgba(23, 23, 23, 0.03);
 }
 
 .flat-button {
-  background: var(--panel);
-  color: var(--ink);
-  border-radius: 999px;
-  padding: 0.55rem 1.2rem;
-  font-weight: 600;
+  background: var(--accent);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 700;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
 }
 
 .flat-button:hover {
-  background: var(--ink);
-  color: var(--panel);
+  background: #2f3cc9;
+  color: #ffffff;
   transition: background 150ms ease, color 150ms ease;
 }

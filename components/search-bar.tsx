@@ -70,7 +70,7 @@ export function SearchBar({
 
   return (
     <div className={outerClassName}>
-      <div className="flex items-center gap-2 rounded-full border border-[var(--muted)]/20 bg-[var(--panel)] px-3 py-2 shadow-sm transition focus-within:border-[var(--accent)]/50 focus-within:ring-2 focus-within:ring-[var(--accent)]/20">
+      <div className="flex items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--panel)] px-3 py-2 shadow-[0_0_0_1px_rgba(23,23,23,0.03)] transition focus-within:border-[var(--accent)] focus-within:ring-2 focus-within:ring-[var(--accent)]/20">
         <Search className="h-4 w-4 flex-shrink-0 text-[var(--muted)]" />
         <input
           value={query}

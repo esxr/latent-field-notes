@@ -28,8 +28,8 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className={`group relative block overflow-hidden bg-[var(--panel)] ${
-        isFeatured ? "rounded-3xl" : "rounded-2xl"
+      className={`group relative block overflow-hidden bg-[var(--panel)] border border-[var(--border)] shadow-[0_0_0_1px_rgba(23,23,23,0.03)] ${
+        isFeatured ? "rounded-2xl" : "rounded-xl"
       }`}
     >
       <div className={`relative flex flex-col gap-3 ${isFeatured ? "p-6 sm:p-8" : "p-5"}`}>
@@ -60,7 +60,7 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
           </p>
         )}
         {!isFeatured && (
-          <div className="text-sm text-[var(--ink)] underline underline-offset-4">
+          <div className="text-sm text-[var(--accent)] underline underline-offset-4">
             Read post
           </div>
         )}

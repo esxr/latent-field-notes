@@ -210,6 +210,14 @@ Many teams mix tools:
 - Write 5 DeepEval tests for the most important intents; wire them to CI.
 - If you already log to LangSmith/LlamaIndex, turn on one trace-based evaluator to debug failures.
 
+## Quick decision matrix
+- **You want metrics tonight with minimal code:** Ragas.
+- **You need CI-friendly gates and baselines:** DeepEval.
+- **You debug chains with tools/calls and want trace overlays:** LangChain + LangSmith evaluators.
+- **You live in LlamaIndex and care about node-level effects:** LlamaIndex evals.
+- **You’re cost-sensitive:** start with embedding metrics and a small local judge; Ragas or DeepEval with caching works well.
+- **You need stakeholders to see rich traces:** LangSmith dashboards or LlamaIndex Explorer screenshots resonate.
+
 ## Future directions to watch
 - **Offline RL-style evaluators:** Using user logs to learn reward models for RAG outputs, reducing LLM-judge calls.
 - **Structured-grounding checks:** Automatic verification that JSON/YAML outputs align with retrieved facts.

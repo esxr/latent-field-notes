@@ -46,7 +46,7 @@ export async function loadVectorStore(): Promise<Chunk[]> {
 
   cachedChunks = chunks.map((chunk, idx) => ({
     ...chunk,
-    embedding: embeddings[idx]?.embedding ?? [],
+    embedding: embeddings[idx] ?? [],
   }));
 
   return cachedChunks;

@@ -10,7 +10,7 @@ const categoryId = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID;
 export function Comments() {
   if (!repo || !repoId || !category || !categoryId) {
     return (
-      <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-sm text-[var(--muted)]">
         Comments are disabled. Add giscus credentials to your environment
         variables to enable per-post discussions.
       </div>
@@ -31,7 +31,7 @@ export function Comments() {
       reactionsEnabled="1"
       emitMetadata="0"
       inputPosition="bottom"
-      theme="preferred_color_scheme"
+      theme="light"
       lang="en"
       loading="lazy"
     />

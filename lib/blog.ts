@@ -13,6 +13,7 @@ export type BlogFrontmatter = {
 export type BlogPost = {
   slug: string;
   content: string;
+  readMinutes?: number;
 } & BlogFrontmatter;
 
 const BLOGS_DIR = path.join(process.cwd(), "blogs");
@@ -35,15 +36,25 @@ export function getAllPostSlugs(): string[] {
 export function getPostBySlug(slug: string): BlogPost {
   const raw = readFile(slug);
   const { data, content } = matter(raw);
+  const headingMatch = content.match(/^#\s+(.+)$/m);
+  const fallbackTitle = headingMatch ? headingMatch[1].trim() : slug;
+  const paragraphMatch = content
+    .replace(/\r\n/g, "\n")
+    .split("\n")
+    .find((line) => line.trim() && !line.trim().startsWith("#"));
+  const wordCount = content.split(/\s+/).filter(Boolean).length;
+  const readMinutes = Math.max(1, Math.round(wordCount / 220));
 
   return {
     slug,
     content,
-    title: (data.title as string | undefined) ?? slug,
+    title: (data.title as string | undefined) ?? fallbackTitle,
     date: data.date as string | undefined,
-    description: data.description as string | undefined,
+    description:
+      (data.description as string | undefined) ?? paragraphMatch ?? "",
     tags: (data.tags as string[] | undefined) ?? [],
     draft: Boolean(data.draft),
+    readMinutes,
   };
 }
 

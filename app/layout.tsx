@@ -1,18 +1,30 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Source_Sans_3,
+  Source_Serif_4,
+  Geist_Mono,
+} from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const uiSans = Source_Sans_3({
+  variable: "--font-ui",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const serifBody = Source_Serif_4({
+  variable: "--font-serif",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const mono = Geist_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -30,23 +42,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-slate-950 text-slate-100 antialiased`}
+        className={`${uiSans.variable} ${serifBody.variable} ${mono.variable} bg-[var(--bg)] text-[var(--ink)] antialiased`}
       >
-        <div className="relative min-h-screen overflow-hidden">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(56,189,248,0.14),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(168,85,247,0.18),transparent_32%),radial-gradient(circle_at_60%_80%,rgba(14,165,233,0.18),transparent_35%)]" />
+        <div className="relative min-h-screen">
           <SiteHeader />
-          <main className="relative mx-auto flex max-w-5xl flex-col gap-12 px-4 pb-16 pt-10 sm:px-6">
+          <main className="relative mx-auto flex w-full max-w-4xl flex-col gap-12 px-4 pb-16 pt-8 sm:px-6">
             {children}
           </main>
-          <footer className="relative border-t border-white/5 bg-black/40 py-10">
-            <div className="mx-auto flex max-w-5xl items-center justify-between px-4 text-sm text-slate-300 sm:px-6">
-              <div>
-                Built with Next.js, Tailwind, shadcn patterns, and Markdown in
-                GitHub.
-              </div>
-              <div className="text-slate-400">
-                © {new Date().getFullYear()} Latent Field Notes
-              </div>
+          <footer className="border-t border-[var(--border)] bg-[var(--panel)]/80 py-10 text-sm text-[var(--muted)]">
+            <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-2 px-4 sm:px-6">
+              <div>Built with Next.js, Tailwind, and Markdown in GitHub.</div>
+              <div>© {new Date().getFullYear()} SegmentX</div>
             </div>
           </footer>
         </div>

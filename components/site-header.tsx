@@ -1,43 +1,42 @@
+"use client";
+
 import Link from "next/link";
-
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/blog", label: "Blog" },
-];
-
-const repoUrl =
-  process.env.NEXT_PUBLIC_GITHUB_REPO_URL ?? "https://github.com/";
+import { usePathname } from "next/navigation";
 
 export function SiteHeader() {
+  const pathname = usePathname();
+  const segments =
+    pathname === "/"
+      ? ["home"]
+      : ["home", ...pathname.split("/").filter(Boolean)];
+
+  const breadcrumbs = segments.map((segment, idx) => {
+    const href =
+      idx === 0 ? "/" : `/${segments.slice(1, idx + 1).join("/") || ""}`;
+    return { label: segment, href: href === "//" ? "/" : href };
+  });
+
   return (
-    <header className="sticky top-0 z-30 border-b border-white/5 bg-black/70 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-transparent backdrop-blur-lg">
+      <div className="mx-auto flex h-16 w-full max-w-4xl items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
-          className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-white"
+          className="text-lg font-semibold tracking-tight text-[var(--ink)]"
         >
-          <span className="h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_0_6px_rgba(56,189,248,0.25)]" />
-          Latent Field Notes
+          SegmentX
         </Link>
 
-        <nav className="flex items-center gap-2 text-sm text-slate-200">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full px-3 py-2 transition hover:bg-white/10"
-            >
-              {item.label}
-            </Link>
-          ))}
-          <Link
-            href={repoUrl}
-            className="rounded-full bg-white/10 px-4 py-2 text-sky-200 transition hover:bg-white/20"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </Link>
+        <nav className="flex items-center gap-2 text-sm text-[var(--muted)]">
+          <div className="flex items-center gap-1 rounded-full border border-[var(--ink)]/60 px-3 py-1.5">
+            {breadcrumbs.map((crumb, idx) => (
+              <span key={crumb.href} className="flex items-center gap-1">
+                <Link href={crumb.href} className="hover:underline">
+                  {crumb.label}
+                </Link>
+                {idx < breadcrumbs.length - 1 ? "/" : null}
+              </span>
+            ))}
+          </div>
         </nav>
       </div>
     </header>

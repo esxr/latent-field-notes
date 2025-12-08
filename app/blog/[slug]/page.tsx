@@ -53,30 +53,52 @@ export default async function BlogPostPage({
   }
 
   return (
-    <article className="space-y-8">
+    <article className="flex flex-col gap-10">
       <Link
         href="/blog"
-        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 transition hover:border-white/30 hover:bg-white/10"
+        className="inline-flex items-center gap-2 text-sm text-[var(--muted)] underline underline-offset-4"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to blog
       </Link>
 
-      <header className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
-          {formatDate(post.date)}
-        </p>
-        <h1 className="text-4xl font-semibold text-white">{post.title}</h1>
-        {post.description && (
-          <p className="text-lg text-slate-200/90">{post.description}</p>
-        )}
+      <header className="flex flex-col gap-4">
+        <div className="flat-card h-60 w-full rounded-3xl border-[var(--border)] bg-[var(--panel)]" />
+        <div className="flex flex-col gap-2">
+          <p className="text-sm uppercase tracking-[0.14em] text-[var(--muted)]">
+            {formatDate(post.date)}
+          </p>
+          <h1 className="font-serif text-4xl font-semibold leading-tight text-[var(--ink)] sm:text-5xl">
+            {post.title}
+          </h1>
+          {post.description && (
+            <p className="text-lg text-[var(--muted)]">{post.description}</p>
+          )}
+          <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--muted)]">
+            {post.readMinutes ? <span>{post.readMinutes} min read</span> : null}
+            {post.tags?.length ? (
+              <span className="flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-[var(--border)] px-3 py-1"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </span>
+            ) : null}
+          </div>
+        </div>
       </header>
 
       <Markdown content={post.content} />
 
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-6">
-        <h2 className="mb-4 text-xl font-semibold text-white">Comments</h2>
-        <Comments />
+      <section className="flex flex-col gap-4">
+        <h2 className="text-xl font-semibold text-[var(--ink)]">Comments</h2>
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-4">
+          <Comments />
+        </div>
       </section>
     </article>
   );

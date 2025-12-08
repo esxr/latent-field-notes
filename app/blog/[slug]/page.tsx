@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Comments } from "@/components/comments";
 import { Markdown } from "@/components/markdown";
-import { ShapeBlur } from "@/components/shape-blur";
 import { formatDate, getAllPostSlugs, getPostBySlug } from "@/lib/blog";
 
 type BlogPageParams = Promise<{ slug: string }>;
@@ -64,16 +64,14 @@ export default async function BlogPostPage({
       </Link>
 
       <header className="flex flex-col gap-4">
-        <div className="flat-card relative h-60 w-full overflow-hidden rounded-3xl bg-[var(--panel)]">
-          <ShapeBlur
-            className="pointer-events-none absolute inset-0 opacity-45"
-            variation={1}
-            shapeSize={0.9}
-            roundness={0.6}
-            borderSize={0.06}
-            circleSize={0.55}
-            circleEdge={1}
-            color="rgba(15,139,141,0.5)"
+        <div className="relative h-60 w-full overflow-hidden rounded-3xl bg-[var(--panel)]">
+          <Image
+            src={post.hero ?? "/vision.excalidraw.png"}
+            alt={post.title ?? "Blog hero"}
+            fill
+            className="object-cover"
+            sizes="(min-width: 1024px) 960px, 100vw"
+            priority
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -105,20 +103,8 @@ export default async function BlogPostPage({
 
       <section className="flex flex-col gap-4">
         <h2 className="text-xl font-semibold text-[var(--ink)]">Comments</h2>
-        <div className="relative overflow-hidden rounded-2xl bg-[var(--panel)] p-4">
-          <ShapeBlur
-            className="pointer-events-none absolute inset-0 opacity-35"
-            variation={3}
-            shapeSize={0.8}
-            roundness={0.7}
-            borderSize={0.05}
-            circleSize={0.5}
-            circleEdge={1}
-            color="rgba(15,139,141,0.4)"
-          />
-          <div className="relative">
+        <div className="rounded-2xl bg-[var(--panel)] p-4">
           <Comments />
-          </div>
         </div>
       </section>
     </article>

@@ -110,6 +110,12 @@ p {
   border-radius: 12px;
 }
 
+.variable-proximity-text {
+  font-family: var(--font-proximity), var(--font-ui), system-ui, sans-serif;
+  font-variation-settings: 'wght' 520, 'opsz' 18;
+  letter-spacing: -0.01em;
+}
+
 .flat-card {
   background: var(--panel);
   border-radius: 16px;

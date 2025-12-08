@@ -3,6 +3,7 @@ import {
   Source_Sans_3,
   Source_Serif_4,
   Geist_Mono,
+  Roboto_Flex,
 } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
@@ -27,6 +28,12 @@ const mono = Geist_Mono({
   display: "swap",
 });
 
+const proximityFont = Roboto_Flex({
+  variable: "--font-proximity",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Latent Field Notes",
   description:
@@ -42,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${uiSans.variable} ${serifBody.variable} ${mono.variable} bg-[var(--bg)] text-[var(--ink)] antialiased`}
+        className={`${uiSans.variable} ${serifBody.variable} ${mono.variable} ${proximityFont.variable} bg-[var(--bg)] text-[var(--ink)] antialiased`}
       >
         <div className="relative min-h-screen">
           <SiteHeader />

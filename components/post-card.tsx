@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { ShapeBlur } from "./shape-blur";
+import { useRef } from "react";
+import { VariableProximityText } from "./variable-proximity-text";
 
 type RenderablePost = {
   slug: string;
@@ -16,6 +19,7 @@ type PostCardProps = {
 };
 
 export function PostCard({ post, variant = "list" }: PostCardProps) {
+  const cardRef = useRef<HTMLAnchorElement>(null);
   const isFeatured = variant === "featured";
   const title = post.title ?? post.slug;
   const formattedDate = post.date
@@ -29,20 +33,11 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
   return (
     <Link
       href={`/blog/${post.slug}`}
+      ref={cardRef}
       className={`group relative overflow-hidden bg-[var(--panel)] ${
         isFeatured ? "rounded-3xl" : "rounded-2xl"
       }`}
     >
-      <ShapeBlur
-        className="pointer-events-none absolute inset-0 opacity-45"
-        variation={isFeatured ? 0 : 2}
-        shapeSize={isFeatured ? 0.8 : 0.9}
-        roundness={0.6}
-        borderSize={0.07}
-        circleSize={0.55}
-        circleEdge={1}
-        color="rgba(15,139,141,0.75)"
-      />
       <div className={`relative flex flex-col gap-3 ${isFeatured ? "p-6 sm:p-8" : "p-5"}`}>
         <div className="flex items-center justify-between text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
           <span>{formattedDate}</span>
@@ -59,7 +54,15 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
             isFeatured ? "text-2xl font-semibold" : "text-xl font-semibold"
           }`}
         >
-          {title}
+          <VariableProximityText
+            label={title}
+            containerRef={cardRef}
+            radius={isFeatured ? 150 : 110}
+            falloff="gaussian"
+            className="block"
+            fromFontVariationSettings="'wght' 540, 'opsz' 18"
+            toFontVariationSettings="'wght' 840, 'opsz' 36"
+          />
         </h3>
         {post.description && (
           <p
@@ -67,12 +70,27 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
               isFeatured ? "text-base" : "text-sm"
             }`}
           >
-            {post.description}
+            <VariableProximityText
+              label={post.description}
+              containerRef={cardRef}
+              radius={isFeatured ? 120 : 90}
+              falloff="linear"
+              className="block"
+              fromFontVariationSettings="'wght' 420, 'opsz' 14"
+              toFontVariationSettings="'wght' 640, 'opsz' 26"
+            />
           </p>
         )}
         {!isFeatured && (
           <div className="text-sm font-medium text-[var(--ink)] underline underline-offset-4">
-            Read post
+            <VariableProximityText
+              label="Read post"
+              containerRef={cardRef}
+              radius={80}
+              falloff="exponential"
+              fromFontVariationSettings="'wght' 520, 'opsz' 14"
+              toFontVariationSettings="'wght' 760, 'opsz' 24"
+            />
           </div>
         )}
       </div>

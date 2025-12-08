@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import { ShapeBlur } from "./shape-blur";
 
 export type SearchResult = {
   title: string;
@@ -66,7 +65,6 @@ export function SearchBar({
 
   return (
     <div className="flat-card relative overflow-hidden">
-      <ShapeBlur className="pointer-events-none absolute inset-0 opacity-35" variation={1} />
       <div className="relative flex flex-col gap-2 p-4">
         <div className="flex items-center justify-between text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
           <span>Search bar (vector search)</span>

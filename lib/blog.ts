@@ -8,15 +8,18 @@ export type BlogFrontmatter = {
   description?: string;
   tags?: string[];
   draft?: boolean;
+  hero?: string;
 };
 
 export type BlogPost = {
   slug: string;
   content: string;
   readMinutes?: number;
+  hero?: string;
 } & BlogFrontmatter;
 
 const BLOGS_DIR = path.join(process.cwd(), "blogs");
+const DEFAULT_HERO = "/vision.excalidraw.png";
 
 function readFile(slug: string) {
   const fullPath = path.join(BLOGS_DIR, `${slug}.md`);
@@ -54,6 +57,7 @@ export function getPostBySlug(slug: string): BlogPost {
       (data.description as string | undefined) ?? paragraphMatch ?? "",
     tags: (data.tags as string[] | undefined) ?? [],
     draft: Boolean(data.draft),
+    hero: (data.hero as string | undefined) ?? DEFAULT_HERO,
     readMinutes,
   };
 }

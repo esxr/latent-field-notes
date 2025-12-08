@@ -34,12 +34,13 @@ NEXT_PUBLIC_GISCUS_CATEGORY_ID=REPLACE_WITH_CATEGORY_ID
 - Add a Markdown file to `/blogs` with frontmatter:
   ```md
   ---
-  title: "Post title"
-  date: "2024-12-01"
-  description: "Short teaser."
-  tags: ["evals", "rag"]
-  draft: false
-  ---
+title: "Post title"
+date: "2024-12-01"
+description: "Short teaser."
+tags: ["evals", "rag"]
+hero: "/images/your-hero.jpg" # optional
+draft: false
+---
   ```
 - Files with `draft: true` are ignored on the index and static generation.
 

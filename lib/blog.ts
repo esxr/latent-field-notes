@@ -19,7 +19,7 @@ export type BlogPost = {
 } & BlogFrontmatter;
 
 const BLOGS_DIR = path.join(process.cwd(), "blogs");
-const DEFAULT_HERO = "/vision.excalidraw.png";
+const DEFAULT_HERO = "";
 
 function readFile(slug: string) {
   const fullPath = path.join(BLOGS_DIR, `${slug}.md`);

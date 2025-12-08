@@ -1,8 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useRef } from "react";
-import { VariableProximityText } from "./variable-proximity-text";
 
 type RenderablePost = {
   slug: string;
@@ -19,7 +15,6 @@ type PostCardProps = {
 };
 
 export function PostCard({ post, variant = "list" }: PostCardProps) {
-  const cardRef = useRef<HTMLAnchorElement>(null);
   const isFeatured = variant === "featured";
   const title = post.title ?? post.slug;
   const formattedDate = post.date
@@ -33,8 +28,7 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      ref={cardRef}
-      className={`group relative overflow-hidden bg-[var(--panel)] ${
+      className={`group relative block overflow-hidden bg-[var(--panel)] ${
         isFeatured ? "rounded-3xl" : "rounded-2xl"
       }`}
     >
@@ -54,15 +48,7 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
             isFeatured ? "text-2xl font-semibold" : "text-xl font-semibold"
           }`}
         >
-          <VariableProximityText
-            label={title}
-            containerRef={cardRef}
-            radius={isFeatured ? 150 : 110}
-            falloff="gaussian"
-            className="block"
-            fromFontVariationSettings="'wght' 540, 'opsz' 18"
-            toFontVariationSettings="'wght' 840, 'opsz' 36"
-          />
+          {title}
         </h3>
         {post.description && (
           <p
@@ -70,27 +56,12 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
               isFeatured ? "text-base" : "text-sm"
             }`}
           >
-            <VariableProximityText
-              label={post.description}
-              containerRef={cardRef}
-              radius={isFeatured ? 120 : 90}
-              falloff="linear"
-              className="block"
-              fromFontVariationSettings="'wght' 420, 'opsz' 14"
-              toFontVariationSettings="'wght' 640, 'opsz' 26"
-            />
+            {post.description}
           </p>
         )}
         {!isFeatured && (
-          <div className="text-sm font-medium text-[var(--ink)] underline underline-offset-4">
-            <VariableProximityText
-              label="Read post"
-              containerRef={cardRef}
-              radius={80}
-              falloff="exponential"
-              fromFontVariationSettings="'wght' 520, 'opsz' 14"
-              toFontVariationSettings="'wght' 760, 'opsz' 24"
-            />
+          <div className="text-sm text-[var(--ink)] underline underline-offset-4">
+            Read post
           </div>
         )}
       </div>

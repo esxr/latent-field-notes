@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
@@ -12,15 +12,15 @@ export type SearchResult = {
 
 type SearchBarProps = {
   placeholder?: string;
-  helper?: string;
+  className?: string;
   onSelect?: (result: SearchResult) => void;
   onResults?: (results: SearchResult[], query: string) => void;
 };
 
-// Borrowed structure from Magic UI search examples; kept flat and light.
+// Minimal inline search field with async results and optional callbacks.
 export function SearchBar({
   placeholder = "Search posts",
-  helper = "Vector search across all posts",
+  className,
   onSelect,
   onResults,
 }: SearchBarProps) {
@@ -33,6 +33,7 @@ export function SearchBar({
   const fetchResults = async (term: string) => {
     if (!term.trim()) {
       setResults([]);
+      onResults?.([], term);
       return;
     }
     setLoading(true);
@@ -63,32 +64,31 @@ export function SearchBar({
 
   const hasResults = useMemo(() => results.length > 0, [results]);
 
+  const outerClassName = ["relative w-full", className]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className="flat-card relative overflow-hidden">
-      <div className="relative flex flex-col gap-2 p-4">
-        <div className="flex items-center justify-between text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
-          <span>Search bar (vector search)</span>
-          <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[10px]">
-            Cmd + K
+    <div className={outerClassName}>
+      <div className="flex items-center gap-2 rounded-full border border-[var(--muted)]/20 bg-[var(--panel)] px-3 py-2 shadow-sm transition focus-within:border-[var(--accent)]/50 focus-within:ring-2 focus-within:ring-[var(--accent)]/20">
+        <Search className="h-4 w-4 flex-shrink-0 text-[var(--muted)]" />
+        <input
+          value={query}
+          onChange={(e) => handleChange(e.target.value)}
+          placeholder={placeholder}
+          aria-label={placeholder}
+          className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--muted)] sm:text-base"
+        />
+        {loading ? (
+          <span className="text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">
+            ...
           </span>
-        </div>
-        <div className="flex items-center gap-2 rounded-xl bg-[var(--panel)] px-3 py-2">
-          <Search className="h-4 w-4 text-[var(--muted)]" />
-          <input
-            value={query}
-            onChange={(e) => handleChange(e.target.value)}
-            placeholder={placeholder}
-            className="w-full bg-transparent text-base text-[var(--ink)] outline-none placeholder:text-[var(--muted)]"
-          />
-          <span className="text-xs text-[var(--muted)]">
-            {loading ? "Searching…" : helper}
-          </span>
-        </div>
+        ) : null}
       </div>
 
       {hasResults && (
-        <div className="relative rounded-2xl bg-[var(--panel)]">
-          <ul className="divide-y divide-transparent">
+        <div className="absolute left-0 right-0 z-20 mt-2 overflow-hidden rounded-2xl border border-[var(--muted)]/10 bg-[var(--panel)] shadow-lg">
+          <ul className="divide-y divide-[var(--muted)]/10">
             {results.map((item) => (
               <li
                 key={item.slug}

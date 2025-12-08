@@ -66,7 +66,7 @@ export default async function BlogPostPage({
       <header className="flex flex-col gap-4">
         <div className="relative h-60 w-full overflow-hidden rounded-3xl bg-[var(--panel)]">
           <Image
-            src={post.hero ?? "/vision.excalidraw.png"}
+            src={post.hero ?? ""}
             alt={post.title ?? "Blog hero"}
             fill
             className="object-cover"

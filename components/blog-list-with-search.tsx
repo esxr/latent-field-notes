@@ -33,11 +33,7 @@ export function BlogListWithSearch({ posts }: BlogListWithSearchProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <SearchBar
-        placeholder="Search blog posts"
-        onResults={handleResults}
-        helper="Vector search"
-      />
+      <SearchBar placeholder="Search blog posts" onResults={handleResults} />
 
       <div className="flex flex-col gap-3">
         {filtered.length === 0 ? (

@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Latent Field Notes
 
-## Getting Started
+Markdown-first blog for AI systems, evals, and alignment notes. Built with Next.js (App Router), Tailwind/shadcn-inspired UI, and giscus for GitHub Discussions-based comments. Content lives in `/blogs/*.md`; edit via PRs like a tiny GitHub CMS.
 
-First, run the development server:
+## Stack
+- Next.js 16 (App Router) + Turbopack
+- Tailwind CSS v4 + shadcn-style components
+- `gray-matter` + `react-markdown` for frontmatter + rendering
+- giscus for comments (one discussion per pathname)
 
+## Development
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Posts are pulled from `/blogs` at build time, sorted by frontmatter dates, and rendered with ReactMarkdown + remark/rehype plugins.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
+Copy `.env.example` to `.env.local` and fill in the values:
+```
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_GITHUB_REPO_URL=https://github.com/yourname/your-blog-repo
+NEXT_PUBLIC_GISCUS_REPO=yourname/your-blog-repo
+NEXT_PUBLIC_GISCUS_REPO_ID=REPLACE_WITH_REPO_ID
+NEXT_PUBLIC_GISCUS_CATEGORY=Comments
+NEXT_PUBLIC_GISCUS_CATEGORY_ID=REPLACE_WITH_CATEGORY_ID
+```
+- `NEXT_PUBLIC_SITE_URL` drives metadata canonical URLs.
+- `NEXT_PUBLIC_GISCUS_*` come from the giscus config screen (mapping = `pathname`).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Content model
+- Add a Markdown file to `/blogs` with frontmatter:
+  ```md
+  ---
+  title: "Post title"
+  date: "2024-12-01"
+  description: "Short teaser."
+  tags: ["evals", "rag"]
+  draft: false
+  ---
+  ```
+- Files with `draft: true` are ignored on the index and static generation.
 
-## Learn More
+## Commands
+- `npm run dev` – start the dev server
+- `npm run lint` – eslint
+- `npm run build` – production build/SSG
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Comments via giscus
+1) Enable Discussions on the GitHub repo and install the giscus app.
+2) Create a category (e.g., `Comments`).
+3) Copy `repo`, `repo_id`, `category`, and `category_id` from https://giscus.app into `.env.local`.
+4) Redeploy; each `/blog/[slug]` page will render a dedicated thread based on the URL pathname.

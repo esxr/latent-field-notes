@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { ShapeBlur } from "./shape-blur";
+
 type RenderablePost = {
   slug: string;
   title?: string;
@@ -27,41 +29,52 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className={`group relative flex flex-col gap-3 border border-[var(--border)] bg-[var(--panel)] ${
-        isFeatured ? "rounded-3xl p-6 sm:p-8" : "rounded-2xl p-5"
+      className={`group relative overflow-hidden bg-[var(--panel)] ${
+        isFeatured ? "rounded-3xl" : "rounded-2xl"
       }`}
     >
-      <div className="flex items-center justify-between text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
-        <span>{formattedDate}</span>
-        <span className="flex items-center gap-2">
-          {post.readMinutes ? (
-            <span className="rounded-full border border-[var(--border)] px-3 py-1 text-[11px] text-[var(--ink)]">
-              {post.readMinutes} min read
-            </span>
-          ) : null}
-        </span>
-      </div>
-      <h3
-        className={`text-[var(--ink)] ${
-          isFeatured ? "text-2xl font-semibold" : "text-xl font-semibold"
-        }`}
-      >
-        {title}
-      </h3>
-      {post.description && (
-        <p
-          className={`leading-relaxed text-[var(--muted)] ${
-            isFeatured ? "text-base" : "text-sm"
+      <ShapeBlur
+        className="pointer-events-none absolute inset-0 opacity-45"
+        variation={isFeatured ? 0 : 2}
+        shapeSize={isFeatured ? 0.8 : 0.9}
+        roundness={0.6}
+        borderSize={0.07}
+        circleSize={0.55}
+        circleEdge={1}
+      />
+      <div className={`relative flex flex-col gap-3 ${isFeatured ? "p-6 sm:p-8" : "p-5"}`}>
+        <div className="flex items-center justify-between text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+          <span>{formattedDate}</span>
+          <span className="flex items-center gap-2">
+            {post.readMinutes ? (
+              <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1 text-[11px] text-[var(--ink)]">
+                {post.readMinutes} min read
+              </span>
+            ) : null}
+          </span>
+        </div>
+        <h3
+          className={`text-[var(--ink)] ${
+            isFeatured ? "text-2xl font-semibold" : "text-xl font-semibold"
           }`}
         >
-          {post.description}
-        </p>
-      )}
-      {!isFeatured && (
-        <div className="text-sm font-medium text-[var(--ink)] underline underline-offset-4">
-          Read post
-        </div>
-      )}
+          {title}
+        </h3>
+        {post.description && (
+          <p
+            className={`leading-relaxed text-[var(--muted)] ${
+              isFeatured ? "text-base" : "text-sm"
+            }`}
+          >
+            {post.description}
+          </p>
+        )}
+        {!isFeatured && (
+          <div className="text-sm font-medium text-[var(--ink)] underline underline-offset-4">
+            Read post
+          </div>
+        )}
+      </div>
     </Link>
   );
 }

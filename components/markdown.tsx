@@ -13,7 +13,7 @@ type MarkdownProps = {
 
 export function Markdown({ content }: MarkdownProps) {
   return (
-    <div className="prose max-w-none text-[var(--ink)] prose-a:text-[var(--ink)] prose-pre:rounded-xl prose-pre:border prose-pre:border-[var(--border)] prose-pre:bg-[#f1ede5] prose-code:text-[#2d2a24]">
+    <div className="prose max-w-none text-[var(--ink)] prose-a:text-[var(--ink)] prose-pre:rounded-xl prose-pre:bg-[#f1ede5] prose-code:text-[#2d2a24]">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[

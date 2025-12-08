@@ -5,7 +5,6 @@
   --panel: #ffffff;
   --ink: #1b1b18;
   --muted: #5b574f;
-  --border: #e6dfd5;
   --accent: #0f8b8d;
   --accent-soft: #e7f4f4;
 }
@@ -80,7 +79,6 @@ p {
 }
 
 .prose blockquote {
-  border-left: 3px solid var(--border);
   padding-left: 1em;
   color: var(--muted);
   font-style: italic;
@@ -98,7 +96,6 @@ p {
   background: #f1ede5;
   padding: 1.1em 1em;
   border-radius: 8px;
-  border: 1px solid var(--border);
   font-size: 0.95em;
 }
 
@@ -111,17 +108,14 @@ p {
 
 .prose img {
   border-radius: 12px;
-  border: 1px solid var(--border);
 }
 
 .flat-card {
-  border: 1.5px solid var(--border);
   background: var(--panel);
   border-radius: 16px;
 }
 
 .flat-button {
-  border: 1.5px solid var(--ink);
   background: var(--panel);
   color: var(--ink);
   border-radius: 999px;

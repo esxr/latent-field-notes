@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
+import { ShapeBlur } from "./shape-blur";
 
 export type SearchResult = {
   title: string;
@@ -64,29 +65,32 @@ export function SearchBar({
   const hasResults = useMemo(() => results.length > 0, [results]);
 
   return (
-    <div className="flat-card flex flex-col gap-2 p-4">
-      <div className="flex items-center justify-between text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
-        <span>Search bar (vector search)</span>
-        <span className="rounded-full border border-[var(--border)] px-2 py-0.5 text-[10px]">
-          Cmd + K
-        </span>
-      </div>
-      <div className="flex items-center gap-2 rounded-xl border border-[var(--ink)]/70 bg-[var(--panel)] px-3 py-2">
-        <Search className="h-4 w-4 text-[var(--muted)]" />
-        <input
-          value={query}
-          onChange={(e) => handleChange(e.target.value)}
-          placeholder={placeholder}
-          className="w-full bg-transparent text-base text-[var(--ink)] outline-none placeholder:text-[var(--muted)]"
-        />
-        <span className="text-xs text-[var(--muted)]">
-          {loading ? "Searching…" : helper}
-        </span>
+    <div className="flat-card relative overflow-hidden">
+      <ShapeBlur className="pointer-events-none absolute inset-0 opacity-35" variation={1} />
+      <div className="relative flex flex-col gap-2 p-4">
+        <div className="flex items-center justify-between text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+          <span>Search bar (vector search)</span>
+          <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[10px]">
+            Cmd + K
+          </span>
+        </div>
+        <div className="flex items-center gap-2 rounded-xl bg-[var(--panel)] px-3 py-2">
+          <Search className="h-4 w-4 text-[var(--muted)]" />
+          <input
+            value={query}
+            onChange={(e) => handleChange(e.target.value)}
+            placeholder={placeholder}
+            className="w-full bg-transparent text-base text-[var(--ink)] outline-none placeholder:text-[var(--muted)]"
+          />
+          <span className="text-xs text-[var(--muted)]">
+            {loading ? "Searching…" : helper}
+          </span>
+        </div>
       </div>
 
       {hasResults && (
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel)]">
-          <ul className="divide-y divide-[var(--border)]">
+        <div className="relative rounded-2xl bg-[var(--panel)]">
+          <ul className="divide-y divide-transparent">
             {results.map((item) => (
               <li
                 key={item.slug}

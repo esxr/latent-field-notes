@@ -17,7 +17,7 @@ export function SiteHeader() {
   });
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-transparent backdrop-blur-lg">
+    <header className="sticky top-0 z-30 bg-transparent backdrop-blur-lg">
       <div className="mx-auto flex h-16 w-full max-w-4xl items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
@@ -27,7 +27,7 @@ export function SiteHeader() {
         </Link>
 
         <nav className="flex items-center gap-2 text-sm text-[var(--muted)]">
-          <div className="flex items-center gap-1 rounded-full border border-[var(--ink)]/60 px-3 py-1.5">
+          <div className="flex items-center gap-1 rounded-full bg-[var(--panel)] px-3 py-1.5">
             {breadcrumbs.map((crumb, idx) => (
               <span key={crumb.href} className="flex items-center gap-1">
                 <Link href={crumb.href} className="hover:underline">

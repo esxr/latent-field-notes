@@ -6,21 +6,21 @@ import { Comments } from "@/components/comments";
 import { Markdown } from "@/components/markdown";
 import { formatDate, getAllPostSlugs, getPostBySlug } from "@/lib/blog";
 
-type BlogPostPageProps = {
-  params: { slug: string };
-};
+type BlogPageParams = Promise<{ slug: string }>;
 
 export async function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }));
 }
 
-export function generateMetadata({ params }: BlogPostPageProps): Metadata {
-  if (!params?.slug) {
-    return { title: "Post | Latent Field Notes" };
-  }
+export async function generateMetadata({
+  params,
+}: {
+  params: BlogPageParams;
+}): Promise<Metadata> {
+  const { slug } = await params;
 
   try {
-    const post = getPostBySlug(params.slug);
+    const post = getPostBySlug(slug);
     return {
       title: `${post.title} | Latent Field Notes`,
       description: post.description,
@@ -33,12 +33,22 @@ export function generateMetadata({ params }: BlogPostPageProps): Metadata {
   }
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage({
+  params,
+}: {
+  params: BlogPageParams;
+}) {
+  const { slug } = await params;
+
   let post;
 
   try {
-    post = getPostBySlug(params.slug);
+    post = getPostBySlug(slug);
   } catch {
+    notFound();
+  }
+
+  if (!post) {
     notFound();
   }
 

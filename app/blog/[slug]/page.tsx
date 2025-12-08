@@ -73,6 +73,7 @@ export default async function BlogPostPage({
             borderSize={0.06}
             circleSize={0.55}
             circleEdge={1}
+            color="rgba(15,139,141,0.5)"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -113,6 +114,7 @@ export default async function BlogPostPage({
             borderSize={0.05}
             circleSize={0.5}
             circleEdge={1}
+            color="rgba(15,139,141,0.4)"
           />
           <div className="relative">
           <Comments />

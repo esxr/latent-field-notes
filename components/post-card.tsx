@@ -41,6 +41,7 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
         borderSize={0.07}
         circleSize={0.55}
         circleEdge={1}
+        color="rgba(15,139,141,0.75)"
       />
       <div className={`relative flex flex-col gap-3 ${isFeatured ? "p-6 sm:p-8" : "p-5"}`}>
         <div className="flex items-center justify-between text-xs uppercase tracking-[0.16em] text-[var(--muted)]">

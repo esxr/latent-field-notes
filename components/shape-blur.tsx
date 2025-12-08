@@ -12,6 +12,7 @@ type ShapeBlurProps = {
   borderSize?: number;
   circleSize?: number;
   circleEdge?: number;
+  color?: string;
 };
 
 // React Bits: Shape Blur animation (adapted). Renders a shader-based blur that follows the pointer.
@@ -24,6 +25,7 @@ export function ShapeBlur({
   borderSize = 0.05,
   circleSize = 0.3,
   circleEdge = 0.5,
+  color = "rgba(15,139,141,0.9)",
 }: ShapeBlurProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
@@ -157,11 +159,27 @@ export function ShapeBlur({
           sdf = fill(sdf, 0.05, sdfCircle) * 1.4;
         }
 
-        vec3 color = vec3(1.0);
+        vec3 color = vec3(__COLOR__);
         float alpha = sdf;
         gl_FragColor = vec4(color.rgb, alpha);
       }
     `;
+
+    const parseColor = (input: string) => {
+      const ctx = document.createElement("canvas").getContext("2d");
+      if (!ctx) return { r: 1, g: 1, b: 1 };
+      ctx.fillStyle = input;
+      const computed = ctx.fillStyle;
+      const m = computed.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+      if (!m) return { r: 1, g: 1, b: 1 };
+      return { r: Number(m[1]) / 255, g: Number(m[2]) / 255, b: Number(m[3]) / 255 };
+    };
+
+    const tint = parseColor(color);
+    const tintedFragment = fragmentShader.replace(
+      "__COLOR__",
+      `${tint.r.toFixed(3)}, ${tint.g.toFixed(3)}, ${tint.b.toFixed(3)}`
+    );
 
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera();
@@ -174,7 +192,7 @@ export function ShapeBlur({
     const geo = new THREE.PlaneGeometry(1, 1);
     const material = new THREE.ShaderMaterial({
       vertexShader,
-      fragmentShader,
+      fragmentShader: tintedFragment,
       uniforms: {
         u_mouse: { value: vMouseDamp },
         u_resolution: { value: vResolution },
@@ -248,7 +266,7 @@ export function ShapeBlur({
       geo.dispose();
       material.dispose();
     };
-  }, [variation, pixelRatioProp, shapeSize, roundness, borderSize, circleSize, circleEdge]);
+  }, [variation, pixelRatioProp, shapeSize, roundness, borderSize, circleSize, circleEdge, color]);
 
   return (
     <div

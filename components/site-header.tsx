@@ -32,6 +32,12 @@ export function SiteHeader() {
             </Link>
 
             <nav className="flex items-center gap-2 text-sm text-[var(--muted)]">
+              <Link
+                href="/chat"
+                className="rounded-md border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-[var(--ink)] shadow-[0_0_0_1px_rgba(23,23,23,0.03)] hover:border-[var(--accent)]"
+              >
+                Chat
+              </Link>
               <div className="flex items-center gap-1 rounded-md border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 shadow-[0_0_0_1px_rgba(23,23,23,0.03)]">
                 {breadcrumbs.map((crumb, idx) => (
                   <span key={crumb.href} className="flex items-center gap-1">

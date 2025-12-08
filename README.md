@@ -49,6 +49,10 @@ draft: false
 - `npm run lint` – eslint
 - `npm run build` – production build/SSG
 
+## Chat over the blog (RAG)
+- Deploy with `OPENAI_API_KEY` set (e.g., in `.env.local` for dev, Vercel project env for prod).
+- The `/chat` page streams answers grounded in the markdown posts using an in-memory vector store built at runtime from `/blogs`.
+
 ## Comments via giscus
 1) Enable Discussions on the GitHub repo and install the giscus app.
 2) Create a category (e.g., `Comments`).

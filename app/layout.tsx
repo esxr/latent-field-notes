@@ -49,12 +49,6 @@ export default function RootLayout({
           <main className="relative mx-auto flex w-full max-w-4xl flex-col gap-12 px-4 pb-16 pt-8 sm:px-6">
             {children}
           </main>
-          <footer className="bg-[var(--panel)]/80 py-10 text-sm text-[var(--muted)]">
-            <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-2 px-4 sm:px-6">
-              <div>Built with Next.js, Tailwind, and Markdown in GitHub.</div>
-              <div>© {new Date().getFullYear()} SegmentX</div>
-            </div>
-          </footer>
         </div>
       </body>
     </html>

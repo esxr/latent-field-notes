@@ -52,8 +52,8 @@ h4 {
 
 p {
   color: var(--muted);
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: 16px;
+  line-height: 1.7;
 }
 
 .prose {
@@ -75,8 +75,8 @@ p {
 
 .prose p {
   color: var(--muted);
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: 16px;
+  line-height: 1.7;
   margin-top: 0.9em;
   margin-bottom: 0.9em;
 }

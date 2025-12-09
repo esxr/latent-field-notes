@@ -1,47 +1,73 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { PostCard } from "@/components/post-card";
-import { SearchBar } from "@/components/search-bar";
-import { PixelBlast } from "@/components/pixel-blast";
 import { getAllPosts } from "@/lib/blog";
+
+export const metadata: Metadata = {
+  title: "Posts",
+  description: "Chronological list of posts.",
+};
 
 export default function Home() {
   const posts = getAllPosts();
-  const [featured, ...rest] = posts;
-  const latest = rest.slice(0, 4);
+
+  const groups = posts.reduce<Record<string, typeof posts>>((acc, post) => {
+    const year = post.date
+      ? new Date(post.date).getFullYear().toString()
+      : "Other";
+    acc[year] = acc[year] || [];
+    acc[year].push(post);
+    return acc;
+  }, {});
+
+  const orderedYears = Object.keys(groups).sort((a, b) => {
+    const numA = Number(a);
+    const numB = Number(b);
+    if (Number.isNaN(numA) && Number.isNaN(numB)) return 0;
+    if (Number.isNaN(numA)) return 1;
+    if (Number.isNaN(numB)) return -1;
+    return numB - numA;
+  });
 
   return (
-    <div className="relative flex flex-col gap-10">
-      <PixelBlast className="pointer-events-none absolute inset-0 opacity-30" density={0.08} />
-      <div className="relative space-y-10">
-      <section>
-        <SearchBar placeholder="Search blog posts" />
-      </section>
+    <section className="page-shell flex flex-col gap-10">
+      <header>
+        <h1 className="mb-6 mt-2">Posts</h1>
+      </header>
 
-      <section className="flex flex-col gap-3">
-        <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-          Featured
-        </p>
-        {featured ? (
-          <PostCard key={featured.slug} post={featured} variant="featured" />
-        ) : (
-          <div className="flat-card p-5 text-[var(--muted)]">
-            No featured post yet.
+      <div className="flex flex-col gap-10">
+        {orderedYears.map((year) => (
+          <div key={year} className="grid grid-cols-[100px_1fr] gap-4">
+            <div className="text-2xl font-light text-[var(--muted)]">{year}</div>
+            <ul className="m-0 list-none p-0">
+              {groups[year].map((post) => {
+                const formatted =
+                  post.date && !Number.isNaN(new Date(post.date).getTime())
+                    ? new Intl.DateTimeFormat("en", {
+                        month: "short",
+                        day: "numeric",
+                      }).format(new Date(post.date))
+                    : "";
+                return (
+                  <li
+                    key={post.slug}
+                    className="border-b border-dashed border-[var(--border-dashed)]"
+                  >
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="flex items-baseline justify-between gap-4 py-4 text-base text-[var(--ink)]"
+                    >
+                      <span className="flex-1 font-normal">{post.title ?? post.slug}</span>
+                      <span className="flex-shrink-0 text-sm text-[var(--muted)]">
+                        {formatted}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-        )}
-      </section>
-
-      <section className="flex flex-col gap-4">
-        {latest.map((post) => (
-          <PostCard key={post.slug} post={post} />
         ))}
-      </section>
-
-      <div className="flex justify-center">
-        <Link href="/blog" className="flat-button text-sm lowercase">
-          more
-        </Link>
       </div>
-      </div>
-    </div>
+    </section>
   );
 }

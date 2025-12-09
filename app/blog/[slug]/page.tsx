@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -53,57 +52,46 @@ export default async function BlogPostPage({
     notFound();
   }
 
-  return (
-    <article className="flex flex-col gap-10">
-      <Link
-        href="/blog"
-        className="inline-flex items-center gap-2 text-sm text-[var(--muted)] underline underline-offset-4"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to blog
-      </Link>
+  const wordCount = post.content.split(/\s+/).filter(Boolean).length;
+  const shortDate =
+    post.date && !Number.isNaN(new Date(post.date).getTime())
+      ? new Intl.DateTimeFormat("en", {
+          month: "short",
+          day: "numeric",
+        }).format(new Date(post.date))
+      : "";
 
-      <header className="flex flex-col gap-4">
-        <div className="relative h-60 w-full overflow-hidden rounded-3xl bg-[var(--panel)]">
-          <Image
-            src={post.hero ?? ""}
-            alt={post.title ?? "Blog hero"}
-            fill
-            className="object-cover"
-            sizes="(min-width: 1024px) 960px, 100vw"
-            priority
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm uppercase tracking-[0.14em] text-[var(--muted)]">
-            {formatDate(post.date)}
-          </p>
-          <h1 className="font-sans text-4xl font-extrabold leading-tight text-[var(--ink)] sm:text-5xl">
-            {post.title}
-          </h1>
-          {post.description && (
-            <p className="text-base text-[var(--muted)]">{post.description}</p>
-          )}
-          <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--muted)]">
-            {post.readMinutes ? <span>{post.readMinutes} min read</span> : null}
-            {post.tags?.length ? (
-              <span className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <span key={tag} className="rounded-full bg-[var(--accent-soft)] px-3 py-1">
-                    {tag}
-                  </span>
-                ))}
-              </span>
-            ) : null}
-          </div>
-        </div>
+  return (
+    <article className="page-shell flex flex-col gap-8">
+      <div className="flex items-center gap-3 text-sm text-[var(--muted)]">
+        <Link href="/blog" className="inline-flex items-center gap-2 hover:underline">
+          <ArrowLeft className="h-4 w-4" />
+          Posts
+        </Link>
+        {post.readMinutes ? <span>{post.readMinutes} minutes</span> : null}
+      </div>
+
+      <header className="flex flex-col gap-2">
+        <p className="text-sm uppercase tracking-[0.14em] text-[var(--muted)]">
+          {shortDate}
+        </p>
+        <h1 className="text-4xl font-extrabold leading-tight text-[var(--ink)] sm:text-[2.625rem]">
+          {post.title}
+        </h1>
       </header>
 
       <Markdown content={post.content} />
 
+      <hr className="border-0 border-t border-[var(--border)]" />
+
+      <section className="flex flex-col gap-2 text-sm text-[var(--muted)]">
+        <p>{wordCount} words</p>
+        <p>{formatDate(post.date)}</p>
+      </section>
+
       <section className="flex flex-col gap-4">
         <h2 className="text-xl font-semibold text-[var(--ink)]">Comments</h2>
-        <div className="rounded-2xl bg-[var(--panel)] p-4">
+        <div className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-4">
           <Comments />
         </div>
       </section>

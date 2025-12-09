@@ -1,0 +1,658 @@
+[
+  {
+    "x": 44.83997434194106,
+    "y": 64.57598081648024,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:6VIKNok2dsvL9rzq5STz_",
+    "type": "text",
+    "props": {
+      "color": "black",
+      "size": "s",
+      "w": 167.05737140070318,
+      "font": "draw",
+      "textAlign": "start",
+      "autoSize": true,
+      "scale": 2.951054863274911,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "About"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Me"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parentId": "shape:0Lh4glsthI9x_ONKtHT6q",
+    "index": "a3OOptQV",
+    "typeName": "shape"
+  },
+  {
+    "x": 76.03024815719692,
+    "y": 92.20044765231631,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:lx6IDzYPFCAl6DBLesjG5",
+    "type": "text",
+    "props": {
+      "color": "black",
+      "size": "s",
+      "w": 41.71875,
+      "font": "draw",
+      "textAlign": "start",
+      "autoSize": true,
+      "scale": 2.951054863274911,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "RAG"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parentId": "shape:YdTs15awfwiiQ4o3xZlIZ",
+    "index": "a3tAemIV",
+    "typeName": "shape"
+  },
+  {
+    "x": 635.7161552551115,
+    "y": 78.96346799202229,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:YdTs15awfwiiQ4o3xZlIZ",
+    "type": "group",
+    "parentId": "page:xNVWQgHUcX6nK165SyN-K",
+    "index": "a87IgCyV",
+    "props": {},
+    "typeName": "shape"
+  },
+  {
+    "x": 11.75153753764721,
+    "y": 76.60799924202229,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:0Lh4glsthI9x_ONKtHT6q",
+    "type": "group",
+    "parentId": "page:xNVWQgHUcX6nK165SyN-K",
+    "index": "a9CPRlsV",
+    "props": {},
+    "typeName": "shape"
+  },
+  {
+    "x": 0,
+    "y": 0,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:QGTYlYzr23t3yPX9ZPf_K",
+    "type": "geo",
+    "props": {
+      "w": 264.95031293344744,
+      "h": 250.07370802921355,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "color": "black",
+      "labelColor": "black",
+      "fill": "solid",
+      "size": "s",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      }
+    },
+    "parentId": "shape:YdTs15awfwiiQ4o3xZlIZ",
+    "index": "a27zSzIt",
+    "typeName": "shape"
+  },
+  {
+    "x": 324.21064273663956,
+    "y": 78.344538811196,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:Z5SfzbxjWILZCOa7Ij-Sz",
+    "type": "group",
+    "parentId": "page:xNVWQgHUcX6nK165SyN-K",
+    "index": "aASJmlUl",
+    "props": {},
+    "typeName": "shape"
+  },
+  {
+    "x": 43.81996809014487,
+    "y": 60.42008757569073,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:zbfd0eOlJGMggapjeh8Z6",
+    "type": "text",
+    "props": {
+      "color": "black",
+      "size": "s",
+      "w": 181.6051496720037,
+      "font": "draw",
+      "textAlign": "start",
+      "autoSize": true,
+      "scale": 2.951054863274911,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "About"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Rubiks"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parentId": "shape:Z5SfzbxjWILZCOa7Ij-Sz",
+    "index": "a3UtU7q8",
+    "typeName": "shape"
+  },
+  {
+    "x": 0,
+    "y": 0,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:NpI9c6ESFisbnyvAT6UWN",
+    "type": "geo",
+    "props": {
+      "w": 264.95031293344744,
+      "h": 250.07370802921355,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "color": "black",
+      "labelColor": "black",
+      "fill": "solid",
+      "size": "s",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      }
+    },
+    "parentId": "shape:0Lh4glsthI9x_ONKtHT6q",
+    "index": "a2gUuToG",
+    "typeName": "shape"
+  },
+  {
+    "x": 30.489983175256498,
+    "y": 28.876475022727618,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:o8uYlR4hj1q9SN-vTQU1e",
+    "type": "text",
+    "props": {
+      "color": "black",
+      "size": "s",
+      "w": 146.3356208356136,
+      "font": "draw",
+      "textAlign": "start",
+      "autoSize": false,
+      "scale": 0.2516935564941356,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "RUbiks AI was invented by Andrej Karpathy and Sam Altman at OpenAI in 2027"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parentId": "shape:Z5SfzbxjWILZCOa7Ij-Sz",
+    "index": "a1",
+    "typeName": "shape"
+  },
+  {
+    "x": 0,
+    "y": 0,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:5S6X3oOdYEEeae2lj1pLp",
+    "type": "geo",
+    "props": {
+      "w": 264.95031293344744,
+      "h": 250.07370802921355,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "color": "black",
+      "labelColor": "black",
+      "fill": "solid",
+      "size": "s",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      }
+    },
+    "parentId": "shape:Z5SfzbxjWILZCOa7Ij-Sz",
+    "index": "a2gt3jtV",
+    "typeName": "shape"
+  },
+  {
+    "x": 7.961225834202594,
+    "y": 17.960491128613853,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:2TkGlwrro82riVm92VHv1",
+    "type": "text",
+    "props": {
+      "color": "black",
+      "size": "s",
+      "w": 208.63415157232615,
+      "font": "draw",
+      "textAlign": "start",
+      "autoSize": false,
+      "scale": 0.20495441869482808,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Pranav Dhoolia teaches extensively about RAG in MIT. "
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "He started in 2022 when AI just came, and has been doing AI ever since."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parentId": "shape:0Lh4glsthI9x_ONKtHT6q",
+    "index": "a1",
+    "typeName": "shape"
+  },
+  {
+    "x": 52.31309146649278,
+    "y": 96.01340948969334,
+    "rotation": 0,
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {},
+    "id": "shape:GomTcVWRXfPB0Rrn-DEu7",
+    "type": "text",
+    "props": {
+      "color": "black",
+      "size": "s",
+      "w": 1507.9765625,
+      "font": "draw",
+      "textAlign": "start",
+      "autoSize": true,
+      "scale": 0.12153208302952197,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Retrieval-augmented generation (RAG) is now the default pattern for mixing private data with LLMs. "
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "The catch: RAG systems fail in subtle ways—irrelevant chunks, partial citations, hallucinated links, formatting errors, latency spikes. "
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Four open-source tools dominate evaluation conversations: "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "Ragas"
+              },
+              {
+                "type": "text",
+                "text": ", "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "DeepEval"
+              },
+              {
+                "type": "text",
+                "text": ", "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "LangChain’s evaluators"
+              },
+              {
+                "type": "text",
+                "text": ", and "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "LlamaIndex’s eval suite"
+              },
+              {
+                "type": "text",
+                "text": ". "
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "This guide compares them on metrics, setup effort, ergonomics, and where each shines."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "dir": "auto",
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "http://localhost:3000/blog/comparison-of-rag-evals#tldr",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer nofollow",
+                      "class": null
+                    }
+                  },
+                  {
+                    "type": "bold"
+                  },
+                  {
+                    "type": "underline"
+                  }
+                ],
+                "text": "TL;DR"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "dir": "auto"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "Ragas:"
+                      },
+                      {
+                        "type": "text",
+                        "text": " Metrics-first library; fast to start, great for recall/faithfulness/answer correctness; batteries included for QA pairs and dataset synthesis."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "dir": "auto"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "DeepEval:"
+                      },
+                      {
+                        "type": "text",
+                        "text": " Test-runner vibe with assertions, LLM judges, and regression tracking; good for mixing functional tests with generative evals."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "dir": "auto"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "LangChain evaluators:"
+                      },
+                      {
+                        "type": "text",
+                        "text": " Flexible primitives and off-the-shelf evaluators; integrates tightly with LangChain traces; broad but DIY wiring."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "dir": "auto"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ],
+                        "text": "LlamaIndex evals:"
+                      },
+                      {
+                        "type": "text",
+                        "text": " Closely coupled to LlamaIndex pipelines; solid retrieval + hallucination metrics; helpful when you already build with LlamaIndex graphs."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dir": "auto"
+            }
+          }
+        ]
+      }
+    },
+    "parentId": "shape:YdTs15awfwiiQ4o3xZlIZ",
+    "index": "a1",
+    "typeName": "shape"
+  }
+]

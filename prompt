@@ -1,0 +1,11 @@
+IMPORTANT: PLEASE GIVE THE BELOW INSTRUCTIONS AS-IS TO THE DEVELOPER SUBAGENT; DON'T DO IT YOURSELF
+---
+
+use the `playwright mcp` to first go to 'https://arvid.xyz/posts/' and take screenshots
+then spin up our own server and go to 'http://localhost:3000/blog' and take screenshots
+
+compare both screenshots, notice the descrepancies, and create a markdown document highlighting what needs to be changed. Here are a few things out of the box:
+
+- the links should not underline on hover
+- the year headings should be on the side the blog titles rather than above
+continue with more discrepancies and note them

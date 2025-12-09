@@ -10,11 +10,20 @@ import remarkGfm from "remark-gfm";
 
 type MarkdownProps = {
   content: string;
+  stripFirstHeading?: boolean;
 };
 
-export function Markdown({ content }: MarkdownProps) {
+function removeFirstH1(markdown: string): string {
+  // Remove the first # heading line (title already shown from frontmatter)
+  // Handle leading whitespace/newlines before the heading
+  return markdown.replace(/^\s*#\s+.+\n*/, "");
+}
+
+export function Markdown({ content, stripFirstHeading = true }: MarkdownProps) {
+  const processedContent = stripFirstHeading ? removeFirstH1(content) : content;
+
   return (
-    <div className="prose max-w-none text-[var(--ink)] prose-a:text-[var(--accent)] prose-strong:text-[var(--ink)] prose-pre:rounded-xl prose-pre:bg-[#0a0c10] prose-pre:text-[#e8e9ed] prose-code:bg-[rgba(0,0,0,0.08)] prose-code:text-[var(--ink)] prose-code:px-2 prose-code:py-1 prose-code:rounded-md">
+    <div className="article-body max-w-none text-[var(--ink)]">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[
@@ -32,7 +41,7 @@ export function Markdown({ content }: MarkdownProps) {
           ],
         ]}
       >
-        {content}
+        {processedContent}
       </ReactMarkdown>
     </div>
   );

@@ -1,10 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+
 export function SiteHeader() {
+  const { state } = useSidebar();
+
   return (
     <header className="bg-[var(--panel)]">
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-4 sm:px-7">
+      <div className="flex w-full items-center justify-between px-5 py-4">
         <Link
           href="/"
           className="text-lg font-bold tracking-tight text-[var(--ink)]"
@@ -13,14 +17,9 @@ export function SiteHeader() {
         </Link>
         <nav className="flex items-center gap-5 text-sm text-[var(--ink)]">
           <Link href="/">
-            Home
-          </Link>
-          <Link href="/blog">
             Posts
           </Link>
-          <Link href="/chat">
-            Chat
-          </Link>
+          {state === "collapsed" && <SidebarTrigger className="rotate-180" />}
         </nav>
       </div>
     </header>

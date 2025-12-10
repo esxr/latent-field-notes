@@ -1,40 +1,46 @@
-import { NextResponse } from "next/server";
-import { openai } from "@ai-sdk/openai";
-import { embed, streamText } from "ai";
-import { loadVectorStore, topK } from "@/lib/vector-store";
+import { query } from "@anthropic-ai/claude-agent-sdk";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
-type ChatMessage = { role: "user" | "assistant" | "system"; content: string };
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
-  const { messages } = (await req.json()) as { messages?: ChatMessage[] };
-  const question = messages?.at(-1)?.content?.trim();
+  const { messages } = await req.json();
+  const userMessage = messages?.at(-1)?.content?.trim();
 
-  if (!question) {
-    return NextResponse.json({ error: "No question provided" }, { status: 400 });
+  if (!userMessage) {
+    return new Response("No message provided", { status: 400 });
   }
 
-  const store = await loadVectorStore();
+  // Create a streaming response
+  const stream = new ReadableStream({
+    async start(controller) {
+      const encoder = new TextEncoder();
 
-  const qEmbedding = await embed({
-    model: openai.embedding("text-embedding-3-small"),
-    value: question,
+      try {
+        for await (const message of query({
+          prompt: userMessage,
+          options: {
+            model: "claude-sonnet-4-20250514",
+            allowedTools: ["WebSearch", "WebFetch", "Read", "Glob", "Grep"],
+            maxTurns: 10,
+            systemPrompt: "You are a helpful assistant for the Latent Field Notes blog about AI systems, evals, and alignment. Help users explore topics and answer questions. You can search the web and read local blog files in /Users/pranav/Desktop/blog/blogs/ directory.",
+          }
+        })) {
+          // Stream each message as newline-delimited JSON
+          controller.enqueue(encoder.encode(JSON.stringify(message) + "\n"));
+        }
+      } catch (error) {
+        controller.enqueue(encoder.encode(JSON.stringify({ type: "error", error: String(error) }) + "\n"));
+      }
+
+      controller.close();
+    }
   });
 
-  const matches = topK(store, qEmbedding.embedding ?? [], 4);
-
-  const context = matches
-    .map((m) => `From /blog/${m.slug}:\n${m.text}`)
-    .join("\n\n");
-
-  const result = streamText({
-    model: openai("gpt-4.1-mini"),
-    system:
-      "You are a concise assistant for the SegmentX blog. Answer using only the provided blog context. If unsure, say you don't know.",
-    prompt: `Context:\n${context}\n\nUser question: ${question}\n\nAnswer grounded in the context:`,
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "application/x-ndjson",
+      "Cache-Control": "no-cache",
+    }
   });
-
-  return result.toTextStreamResponse();
 }

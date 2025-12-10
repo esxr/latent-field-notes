@@ -19,26 +19,36 @@ import {
   ToolOutput,
 } from "@/components/ui/shadcn-io/ai/tool";
 import {
-  PromptInput,
-  PromptInputTextarea,
-  PromptInputToolbar,
-  PromptInputSubmit,
-} from "@/components/ui/shadcn-io/ai/prompt-input";
-
-type ChatMessage = {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  tools?: ToolCall[];
-};
+  Reasoning,
+  ReasoningTrigger,
+  ReasoningContent,
+} from "@/components/ui/shadcn-io/ai/reasoning";
+import { Loader } from "@/components/ui/shadcn-io/ai/loader";
+import { Actions, Action } from "@/components/ui/shadcn-io/ai/actions";
+import { Suggestions, Suggestion } from "@/components/ui/shadcn-io/ai/suggestion";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { IconSend, IconCopy, IconCheck } from "@tabler/icons-react";
 
 type ToolCall = {
   id: string;
-  type: `tool-${string}`;
+  name: string;
   state: "input-streaming" | "input-available" | "output-available" | "output-error";
   input?: any;
   output?: string;
   errorText?: string;
+};
+
+type ChatMessage = {
+  id: string;
+  role: "user" | "assistant" | "reasoning";
+  content: string;
+  // For reasoning messages - groups intermediate thoughts + tools
+  reasoning?: {
+    thoughts: string[];
+    tools: ToolCall[];
+    isStreaming: boolean;
+  };
 };
 
 // Lightweight chat panel that streams the /api/chat response with Claude Agent SDK
@@ -46,7 +56,18 @@ export function ChatPanel() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement | null>(null);
+
+  const handleCopy = async (content: string, id: string) => {
+    await navigator.clipboard.writeText(content);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setInput(suggestion);
+  };
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -79,9 +100,12 @@ export function ChatPanel() {
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
-    let assistantText = "";
-    let currentTools: Record<string, ToolCall> = {};
-    let assistantId = Date.now().toString();
+
+    // Track the current reasoning block
+    const reasoningId = `reasoning-${Date.now()}`;
+    let thoughts: string[] = [];
+    let tools: Record<string, ToolCall> = {};
+    let hasReasoning = false;
 
     // Stream chunks and parse NDJSON
     let buffer = "";
@@ -91,7 +115,7 @@ export function ChatPanel() {
 
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split("\n");
-      buffer = lines.pop() || ""; // Keep incomplete line in buffer
+      buffer = lines.pop() || "";
 
       for (const line of lines) {
         if (!line.trim()) continue;
@@ -99,99 +123,141 @@ export function ChatPanel() {
         try {
           const message = JSON.parse(line);
 
-          // Handle different message types from Claude Agent SDK
           if (message.type === "assistant" && message.message?.content) {
-            // Process content array which can contain text and tool_use blocks
             for (const block of message.message.content) {
-              if (block.type === "text") {
-                assistantText += block.text;
+              if (block.type === "text" && block.text) {
+                // Add intermediate thought
+                thoughts.push(block.text);
+                hasReasoning = true;
+
+                setMessages((prev) => {
+                  const next = [...prev];
+                  const idx = next.findIndex(m => m.id === reasoningId);
+                  if (idx >= 0) {
+                    next[idx] = {
+                      ...next[idx],
+                      reasoning: {
+                        thoughts: [...thoughts],
+                        tools: Object.values(tools),
+                        isStreaming: true,
+                      },
+                    };
+                    return next;
+                  }
+                  return [
+                    ...next,
+                    {
+                      id: reasoningId,
+                      role: "reasoning",
+                      content: "",
+                      reasoning: {
+                        thoughts: [...thoughts],
+                        tools: Object.values(tools),
+                        isStreaming: true,
+                      },
+                    },
+                  ];
+                });
               } else if (block.type === "tool_use") {
-                // Track tool call
-                currentTools[block.id] = {
+                // Add tool call to reasoning
+                tools[block.id] = {
                   id: block.id,
-                  type: `tool-${block.name}`,
+                  name: block.name,
                   state: "input-available",
                   input: block.input,
                 };
+                hasReasoning = true;
+
+                setMessages((prev) => {
+                  const next = [...prev];
+                  const idx = next.findIndex(m => m.id === reasoningId);
+                  if (idx >= 0) {
+                    next[idx] = {
+                      ...next[idx],
+                      reasoning: {
+                        thoughts: [...thoughts],
+                        tools: Object.values(tools),
+                        isStreaming: true,
+                      },
+                    };
+                    return next;
+                  }
+                  return [
+                    ...next,
+                    {
+                      id: reasoningId,
+                      role: "reasoning",
+                      content: "",
+                      reasoning: {
+                        thoughts: [...thoughts],
+                        tools: Object.values(tools),
+                        isStreaming: true,
+                      },
+                    },
+                  ];
+                });
               }
             }
-
-            // Update assistant message with accumulated text and tools
-            setMessages((prev) => {
-              const next = [...prev];
-              const last = next[next.length - 1];
-              if (last?.role === "assistant" && last.id === assistantId) {
-                last.content = assistantText;
-                last.tools = Object.values(currentTools);
-                return [...next];
-              }
-              return [
-                ...next,
-                {
-                  id: assistantId,
-                  role: "assistant",
-                  content: assistantText,
-                  tools: Object.values(currentTools),
-                },
-              ];
-            });
           } else if (message.type === "result") {
-            // Final result - contains full response
-            if (message.result) {
-              assistantText = message.result;
+            // Final result - mark reasoning as done and add final response
+            if (hasReasoning) {
               setMessages((prev) => {
                 const next = [...prev];
-                const last = next[next.length - 1];
-                if (last?.role === "assistant" && last.id === assistantId) {
-                  last.content = assistantText;
-                  return [...next];
+                const idx = next.findIndex(m => m.id === reasoningId);
+                if (idx >= 0 && next[idx].reasoning) {
+                  next[idx] = {
+                    ...next[idx],
+                    reasoning: {
+                      ...next[idx].reasoning!,
+                      isStreaming: false,
+                    },
+                  };
                 }
-                return [
-                  ...next,
-                  {
-                    id: assistantId,
-                    role: "assistant",
-                    content: assistantText,
-                    tools: Object.values(currentTools),
-                  },
-                ];
+                return next;
               });
+            }
+
+            if (message.result) {
+              setMessages((prev) => [
+                ...prev,
+                { id: `result-${Date.now()}`, role: "assistant", content: message.result },
+              ]);
             }
           } else if (message.type === "tool_result") {
             // Update tool with result
-            if (message.tool_use_id && currentTools[message.tool_use_id]) {
+            if (message.tool_use_id && tools[message.tool_use_id]) {
               const toolOutput = typeof message.content === "string"
                 ? message.content
                 : JSON.stringify(message.content);
+              const isError = message.is_error;
 
-              currentTools[message.tool_use_id].state = message.is_error
-                ? "output-error"
-                : "output-available";
-              currentTools[message.tool_use_id].output = toolOutput;
-              if (message.is_error) {
-                currentTools[message.tool_use_id].errorText = toolOutput;
-              }
+              tools[message.tool_use_id] = {
+                ...tools[message.tool_use_id],
+                state: isError ? "output-error" : "output-available",
+                output: toolOutput,
+                errorText: isError ? toolOutput : undefined,
+              };
 
               setMessages((prev) => {
                 const next = [...prev];
-                const last = next[next.length - 1];
-                if (last?.role === "assistant" && last.id === assistantId) {
-                  last.tools = Object.values(currentTools);
-                  return [...next];
+                const idx = next.findIndex(m => m.id === reasoningId);
+                if (idx >= 0 && next[idx].reasoning) {
+                  next[idx] = {
+                    ...next[idx],
+                    reasoning: {
+                      ...next[idx].reasoning!,
+                      tools: Object.values(tools),
+                    },
+                  };
                 }
-                return [...next];
+                return next;
               });
             }
           } else if (message.type === "error") {
-            // Handle errors
             console.error("Chat error:", message.error);
             setMessages((prev) => [
               ...prev,
-              {
-                id: Date.now().toString(),
-                role: "assistant",
-                content: `Error: ${message.error}`,
-              },
+              { id: `error-${Date.now()}`, role: "assistant", content: `Error: ${message.error}` },
             ]);
           }
         } catch (err) {
@@ -205,72 +271,133 @@ export function ChatPanel() {
 
   return (
     <div className="flex flex-col h-full bg-[var(--panel)] overflow-hidden">
-      <Conversation className="flex-1 overflow-y-auto">
+      <Conversation className="flex-1">
         <ConversationContent>
           {messages.length === 0 ? (
-            <p className="text-sm text-[var(--muted)]">
-              Ask anything about the blog posts or general topics. I can search the web and read blog files.
-            </p>
+            <div className="space-y-4">
+              <p className="text-sm text-[var(--muted)]">
+                Ask anything about the blog posts or general topics. I can search the web and read blog files.
+              </p>
+              <Suggestions>
+                <Suggestion suggestion="What topics do you write about?" onClick={handleSuggestionClick} />
+                <Suggestion suggestion="Summarize your latest post" onClick={handleSuggestionClick} />
+                <Suggestion suggestion="Explain AI evals" onClick={handleSuggestionClick} />
+              </Suggestions>
+            </div>
           ) : (
-            messages.map((m) => (
-              <Message key={m.id} from={m.role}>
-                <MessageAvatar
-                  src=""
-                  name={m.role === "user" ? "You" : "AI"}
-                  className={m.role === "assistant" ? "bg-primary text-primary-foreground" : undefined}
-                />
-                <MessageContent>
-                  {m.role === "user" ? (
-                    <div className="text-sm">{m.content}</div>
-                  ) : (
-                    <>
-                      {m.tools && m.tools.length > 0 && (
-                        <div className="space-y-2 mb-3">
-                          {m.tools.map((tool) => (
-                            <Tool key={tool.id}>
-                              <ToolHeader type={tool.type} state={tool.state} />
-                              <ToolContent>
-                                {tool.input && (
-                                  <ToolInput input={tool.input} />
-                                )}
-                                {(tool.output || tool.errorText) && (
-                                  <ToolOutput
-                                    output={tool.output}
-                                    errorText={tool.errorText}
-                                  />
-                                )}
-                              </ToolContent>
-                            </Tool>
-                          ))}
-                        </div>
-                      )}
-                      <Response>{m.content}</Response>
-                    </>
-                  )}
-                </MessageContent>
-              </Message>
-            ))
+            messages.map((m) => {
+              // Render reasoning blocks (intermediate thoughts + tools)
+              if (m.role === "reasoning" && m.reasoning) {
+                return (
+                  <Reasoning key={m.id} isStreaming={m.reasoning.isStreaming} defaultOpen>
+                    <ReasoningTrigger />
+                    <ReasoningContent>
+                      {m.reasoning.thoughts.join("\n\n")}
+                    </ReasoningContent>
+                    {m.reasoning.tools.length > 0 && (
+                      <div className="mt-2 space-y-2">
+                        {m.reasoning.tools.map((tool) => (
+                          <Tool key={tool.id}>
+                            <ToolHeader
+                              type={`${tool.name}` as any}
+                              state={tool.state}
+                            />
+                            <ToolContent>
+                              {tool.input && <ToolInput input={tool.input} />}
+                              {(tool.output || tool.errorText) && (
+                                <ToolOutput output={tool.output} errorText={tool.errorText} />
+                              )}
+                            </ToolContent>
+                          </Tool>
+                        ))}
+                      </div>
+                    )}
+                  </Reasoning>
+                );
+              }
+
+              // Render user and assistant messages
+              return (
+                <Message key={m.id} from={m.role === "reasoning" ? "assistant" : m.role}>
+                  <MessageAvatar
+                    src=""
+                    name={m.role === "user" ? "You" : "AI"}
+                    className={m.role !== "user" ? "bg-primary text-primary-foreground" : undefined}
+                  />
+                  <MessageContent>
+                    {m.role === "user" ? (
+                      <div className="text-sm">{m.content}</div>
+                    ) : (
+                      <>
+                        <Response>{m.content}</Response>
+                        {m.content && (
+                          <Actions className="mt-2">
+                            <Action
+                              tooltip={copiedId === m.id ? "Copied!" : "Copy"}
+                              onClick={() => handleCopy(m.content, m.id)}
+                            >
+                              {copiedId === m.id ? (
+                                <IconCheck className="size-4" />
+                              ) : (
+                                <IconCopy className="size-4" />
+                              )}
+                            </Action>
+                          </Actions>
+                        )}
+                      </>
+                    )}
+                  </MessageContent>
+                </Message>
+              );
+            })
+          )}
+          {loading && messages[messages.length - 1]?.role === "user" && (
+            <div className="flex items-center gap-2 px-4 py-3">
+              <Loader size={18} />
+              <span className="text-sm text-[var(--muted)]">Thinking...</span>
+            </div>
           )}
           <div ref={endRef} />
         </ConversationContent>
       </Conversation>
 
-      <div className="border-t border-[var(--border)] p-4">
-        <PromptInput onSubmit={send}>
-          <PromptInputTextarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={loading ? "Working..." : "Ask about the blog content or anything else"}
-            disabled={loading}
-          />
-          <PromptInputToolbar>
-            <div className="flex-1" />
-            <PromptInputSubmit
+      <div className="p-3">
+        <div className="bg-background border border-border rounded-2xl overflow-hidden">
+          <div className="px-3 pt-3 pb-2">
+            <form onSubmit={send}>
+              <Textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={loading ? "Working..." : "Ask anything"}
+                disabled={loading}
+                className="w-full bg-transparent! p-0 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground placeholder-muted-foreground resize-none border-none outline-none text-sm min-h-10 max-h-[25vh]"
+                rows={1}
+                onInput={(e) => {
+                  const target = e.target as HTMLTextAreaElement;
+                  target.style.height = "auto";
+                  target.style.height = target.scrollHeight + "px";
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    e.currentTarget.form?.requestSubmit();
+                  }
+                }}
+              />
+            </form>
+          </div>
+
+          <div className="mb-2 px-2 flex items-center justify-end">
+            <Button
+              type="submit"
               disabled={loading || !input.trim()}
-              status={loading ? "streaming" : "ready"}
-            />
-          </PromptInputToolbar>
-        </PromptInput>
+              className="size-7 p-0 rounded-full bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={send as any}
+            >
+              <IconSend className="size-3 fill-primary" />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

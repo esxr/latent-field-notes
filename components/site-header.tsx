@@ -7,7 +7,7 @@ export function SiteHeader() {
   const { state } = useSidebar();
 
   return (
-    <header className="bg-[var(--panel)]">
+    <header className="sticky top-0 z-50 bg-[var(--panel)]">
       <div className="flex w-full items-center justify-between px-5 py-4">
         <Link
           href="/"

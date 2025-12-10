@@ -38,7 +38,7 @@ export async function POST(req: Request) {
             allowedTools: ["WebSearch", "WebFetch", "Read", "Glob", "Grep"],
             maxTurns: 10,
             systemPrompt:
-              "You are a helpful assistant for the Latent Field Notes blog about AI systems, evals, and alignment. Help users explore topics and answer questions. You can search the web and read local blog files in the ./blogs/ directory. You can also use the ./storage/ directory for any file operations.",
+              "You can search the web and read local blog files in the ./blogs/ directory. You can also use the ./storage/ directory for any file operations.",
 
             canUseTool: async (
               toolName: string,

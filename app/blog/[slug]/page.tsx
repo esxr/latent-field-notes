@@ -22,12 +22,12 @@ export async function generateMetadata({
   try {
     const post = getPostBySlug(slug);
     return {
-      title: `${post.title} | Latent Field Notes`,
+      title: `${post.title} | esxr.io`,
       description: post.description,
     };
   } catch {
     return {
-      title: "Post not found | Latent Field Notes",
+      title: "Post not found | esxr.io",
       description: "The requested post could not be found.",
     };
   }

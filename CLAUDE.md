@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is "Latent Field Notes" - a markdown-first blog built with Next.js 16 (App Router) focused on AI systems, evals, and alignment notes. Blog posts are stored as markdown files in `/blogs` with frontmatter metadata. The site includes a RAG-powered chat feature that answers questions grounded in the blog content using runtime vector embeddings.
+This is "esxr.io" - Pranav Dhoolia discussing about AI systems, evals, and fine-tuning in his personal blog. It is built with Next.js 16 (App Router). Blog posts are stored as markdown files in `/blogs` with frontmatter metadata. The site includes a RAG-powered chat feature that answers questions grounded in the blog content using runtime vector embeddings.
 
 ## Development Commands
 

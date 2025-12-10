@@ -13,7 +13,7 @@ export function SiteHeader() {
           href="/"
           className="text-lg font-bold tracking-tight text-[var(--ink)]"
         >
-          Latent Field Notes
+          esxr.io
         </Link>
         <nav className="flex items-center gap-5 text-sm text-[var(--ink)]">
           <Link href="/">

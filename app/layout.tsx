@@ -21,9 +21,9 @@ const mono = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Latent Field Notes",
+  title: "Esxr.io",
   description:
-    "AI systems, evals, and alignment patterns. Markdown-first blog powered by Next.js, Tailwind, shadcn, and giscus.",
+    "Pranav Dhoolia discussing about AI systems, evals, and fine-tuning in his personal blog.",
   metadataBase: new URL(siteUrl),
 };
 

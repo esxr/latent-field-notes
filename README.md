@@ -1,6 +1,6 @@
-# Latent Field Notes
+# esxr.io
 
-Markdown-first blog for AI systems, evals, and alignment notes. Built with Next.js (App Router), Tailwind/shadcn-inspired UI, and giscus for GitHub Discussions-based comments. Content lives in `/blogs/*.md`; edit via PRs like a tiny GitHub CMS.
+This is "esxr.io" - Pranav Dhoolia's personal blog discussing about AI systems, evals, and fine-tuning, and his career. Built with Next.js (App Router), Tailwind/shadcn-inspired UI, and giscus for GitHub Discussions-based comments. Content lives in `/blogs/*.md`; edit via PRs like a tiny GitHub CMS.
 
 ## Stack
 - Next.js 16 (App Router) + Turbopack

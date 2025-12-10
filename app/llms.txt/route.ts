@@ -1,6 +1,6 @@
 import { getAllPosts } from "@/lib/blog";
 
-const siteName = "Latent Field Notes";
+const siteName = "esxr.io";
 
 function trimTrailingSlash(url?: string | null) {
   if (!url) return "";

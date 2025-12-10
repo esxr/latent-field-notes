@@ -270,19 +270,14 @@ export function ChatPanel() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[var(--panel)] overflow-hidden">
-      <Conversation className="flex-1">
+    <div className="flex flex-col h-full min-h-0 bg-[var(--panel)] overflow-hidden">
+      <Conversation className="flex-1 min-h-0">
         <ConversationContent>
           {messages.length === 0 ? (
             <div className="space-y-4">
               <p className="text-sm text-[var(--muted)]">
-                Ask anything about the blog posts or general topics. I can search the web and read blog files.
+                Ask anything about this site's contents. You can also virtually get to know me here!
               </p>
-              <Suggestions>
-                <Suggestion suggestion="What topics do you write about?" onClick={handleSuggestionClick} />
-                <Suggestion suggestion="Summarize your latest post" onClick={handleSuggestionClick} />
-                <Suggestion suggestion="Explain AI evals" onClick={handleSuggestionClick} />
-              </Suggestions>
             </div>
           ) : (
             messages.map((m) => {

@@ -377,6 +377,29 @@ p {
 }
 
 
+/* Chat sidebar scroll container fix */
+/* SidebarContent - prevent scrolling */
+.chat-scope[data-sidebar="content"] {
+  overflow: hidden !important;
+}
+
+/* Conversation (StickToBottom wrapper) - relative positioning context */
+.chat-scope [role="log"] {
+  position: relative !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* StickToBottom.Content scrollRef div - absolute fill + scrollable */
+.chat-scope [role="log"] > div {
+  position: absolute !important;
+  inset: 0 !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
 .dark {
   --sidebar: hsl(240 5.9% 10%);
   --sidebar-foreground: hsl(240 4.8% 95.9%);

@@ -16,7 +16,7 @@ export function ChatSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) 
         <h2 className="text-lg font-semibold invisible">Chat</h2>
         <SidebarTrigger className="rotate-180" />
       </SidebarHeader>
-      <SidebarContent className="chat-scope overflow-hidden">
+      <SidebarContent className="chat-scope !overflow-hidden">
         <ChatPanel />
       </SidebarContent>
       <SidebarRail />

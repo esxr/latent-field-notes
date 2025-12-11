@@ -21,7 +21,7 @@ const mono = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Esxr.io",
+  title: "Pranav Dhoolia",
   description:
     "Pranav Dhoolia discussing about AI systems, evals, and fine-tuning in his personal blog.",
   metadataBase: new URL(siteUrl),

@@ -13,11 +13,14 @@ export function SiteHeader() {
           href="/"
           className="text-lg font-bold tracking-tight text-[var(--ink)]"
         >
-          esxr.io
+          Pranav Dhoolia
         </Link>
         <nav className="flex items-center gap-5 text-sm text-[var(--ink)]">
           <Link href="/">
             Posts
+          </Link>
+          <Link href="/about">
+            About
           </Link>
           {state === "collapsed" && <SidebarTrigger className="rotate-180" />}
         </nav>

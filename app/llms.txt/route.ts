@@ -1,6 +1,6 @@
 import { getAllPosts } from "@/lib/blog";
 
-const siteName = "esxr.io";
+const siteName = "Pranav Dhoolia";
 
 function trimTrailingSlash(url?: string | null) {
   if (!url) return "";

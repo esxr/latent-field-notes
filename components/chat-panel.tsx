@@ -8,7 +8,6 @@ import {
 import {
   Message,
   MessageContent,
-  MessageAvatar,
 } from "@/components/ui/shadcn-io/ai/message";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
 import {
@@ -314,11 +313,6 @@ export function ChatPanel() {
               // Render user and assistant messages
               return (
                 <Message key={m.id} from={m.role === "reasoning" ? "assistant" : m.role}>
-                  <MessageAvatar
-                    src=""
-                    name={m.role === "user" ? "You" : "AI"}
-                    className={m.role !== "user" ? "bg-primary text-primary-foreground" : undefined}
-                  />
                   <MessageContent>
                     {m.role === "user" ? (
                       <div className="text-sm">{m.content}</div>

@@ -131,7 +131,7 @@ export const ReasoningTrigger = memo(
     return (
       <CollapsibleTrigger
         className={cn(
-          'flex items-center gap-2 text-muted-foreground text-sm',
+          'flex items-center gap-2 text-gray-500 text-sm',
           className
         )}
         {...(props as any)}
@@ -146,7 +146,7 @@ export const ReasoningTrigger = memo(
             )}
             <ChevronDownIcon
               className={cn(
-                'size-4 text-muted-foreground transition-transform',
+                'size-4 text-gray-500 transition-transform',
                 isOpen ? 'rotate-180' : 'rotate-0'
               )}
             />

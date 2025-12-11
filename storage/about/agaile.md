@@ -2,7 +2,7 @@
 title: "AGAILE Inc. - AI Engineer"
 from: "2024-10-01"
 to: "2025-03-01"
-description: "In this demo, I deploy a RAG (Retrieval Augmented Generation) based embeddable chatbot for Question Answering over website content. I use AI solution templates that I developed at AGAILE. The backend for our solution templates is built on LangGraph, and Assistant UI over NextJS on AWS ECS for the frontend."
+description: "Lead AI Engineer | Developed and deployed a custom orchestration platform (CAP); Developed pluggable RAG chatbot for website"
 category: "experience"
 tags: ["AI", "Contract", "Generative AI", "LLM", "Virtual Assistant"]
 icon: "https://media.licdn.com/dms/image/v2/D560BAQHbhMwQNu0z5A/company-logo_100_100/company-logo_100_100/0/1726738420180?e=1767225600&v=beta&t=SG_fiFS-ZPYpBD7HvgfCsZlIG7j5uchcLoZZNACF8RY"

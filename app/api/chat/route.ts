@@ -31,6 +31,12 @@ export async function POST(req: Request) {
       const encoder = new TextEncoder();
 
       try {
+        console.log("[DEBUG] Starting query with message:", userMessage);
+        console.log("[DEBUG] Environment check:");
+        console.log("  - NODE_ENV:", process.env.NODE_ENV);
+        console.log("  - CWD:", process.cwd());
+        console.log("  - ANTHROPIC_API_KEY present:", !!process.env.ANTHROPIC_API_KEY);
+
         for await (const message of query({
           prompt: userMessage,
           options: {
@@ -64,11 +70,14 @@ export async function POST(req: Request) {
             },
           },
         })) {
+          console.log("[DEBUG] Received message type:", message.type);
           // Stream each message as newline-delimited JSON
           controller.enqueue(encoder.encode(JSON.stringify(message) + "\n"));
         }
       } catch (error) {
-        controller.enqueue(encoder.encode(JSON.stringify({ type: "error", error: String(error) }) + "\n"));
+        console.error("[ERROR] Chat API error:", error);
+        console.error("[ERROR] Stack:", error instanceof Error ? error.stack : "N/A");
+        controller.enqueue(encoder.encode(JSON.stringify({ type: "error", error: String(error), stack: error instanceof Error ? error.stack : undefined }) + "\n"));
       }
 
       controller.close();

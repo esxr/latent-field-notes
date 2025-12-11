@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { getAllAboutEntries, getAboutSummary, type AboutCategory } from "@/lib/about";
 import { Markdown } from "@/components/markdown";
+import { DraggableRow } from "@/components/draggable-row";
 
 export const metadata: Metadata = {
   title: "About",
@@ -116,13 +117,19 @@ export default function AboutPage() {
                                       className="w-6 h-6 rounded object-contain flex-shrink-0"
                                     />
                                   )}
-                                  <Link
-                                    href={`/about/${entry.slug}`}
-                                    className="inline-flex items-start sm:items-center gap-1 font-normal text-base text-[var(--ink)] hover:underline min-w-0"
+                                  <DraggableRow
+                                    slug={entry.slug}
+                                    title={entry.title ?? entry.slug}
+                                    path={`storage/about/${entry.slug}.md`}
                                   >
-                                    <span className="line-clamp-2 sm:truncate">{entry.title ?? entry.slug}</span>
-                                    <ArrowUpRight className="w-4 h-4 flex-shrink-0 text-[var(--muted)] mt-1 sm:mt-0" />
-                                  </Link>
+                                    <Link
+                                      href={`/about/${entry.slug}`}
+                                      className="inline-flex items-start sm:items-center gap-1 font-normal text-base text-[var(--ink)] hover:underline min-w-0"
+                                    >
+                                      <span className="line-clamp-2 sm:truncate">{entry.title ?? entry.slug}</span>
+                                      <ArrowUpRight className="w-4 h-4 flex-shrink-0 text-[var(--muted)] mt-1 sm:mt-0" />
+                                    </Link>
+                                  </DraggableRow>
                                 </div>
                                 <span className="flex-shrink-0 text-xs sm:text-sm text-[var(--muted)]">
                                   {dateRange}

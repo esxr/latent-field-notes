@@ -18,7 +18,7 @@ function isPathAllowed(path: string): boolean {
 }
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, context } = await req.json();
   const userMessage = messages?.at(-1)?.content?.trim();
 
   if (!userMessage) {
@@ -36,14 +36,24 @@ export async function POST(req: Request) {
           process.env.HOME = "/tmp";
         }
 
+        // Build system prompt with optional context
+        let systemPrompt =
+          "You can search the web and read local blog files in the ./blogs/ directory. You can also use the ./storage/ directory for any file operations.";
+
+        if (context && context.length > 0) {
+          const fileList = context
+            .map((filePath: string) => `./${filePath}`)
+            .join(", ");
+          systemPrompt += ` The user has selected specific content for context. Focus primarily on these files: ${fileList}. Use the Read tool to access their content.`;
+        }
+
         for await (const message of query({
           prompt: userMessage,
           options: {
             model: "claude-sonnet-4-20250514",
             allowedTools: ["WebSearch", "WebFetch", "Read", "Glob", "Grep"],
             maxTurns: 10,
-            systemPrompt:
-              "You can search the web and read local blog files in the ./blogs/ directory. You can also use the ./storage/ directory for any file operations.",
+            systemPrompt,
 
             canUseTool: async (
               toolName: string,

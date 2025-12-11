@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/shadcn-io/ai/reasoning";
 import { Loader } from "@/components/ui/shadcn-io/ai/loader";
 import { Actions, Action } from "@/components/ui/shadcn-io/ai/actions";
-import { Suggestions, Suggestion } from "@/components/ui/shadcn-io/ai/suggestion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { IconSend, IconCopy, IconCheck } from "@tabler/icons-react";
@@ -33,7 +32,7 @@ type ToolCall = {
   id: string;
   name: string;
   state: "input-streaming" | "input-available" | "output-available" | "output-error";
-  input?: any;
+  input?: Record<string, unknown>;
   output?: string;
   errorText?: string;
 };
@@ -56,6 +55,7 @@ export function ChatPanel() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [contextItems, setContextItems] = useState<Array<{ slug: string; title: string; path: string }>>([]);
   const endRef = useRef<HTMLDivElement | null>(null);
 
   const handleCopy = async (content: string, id: string) => {
@@ -64,8 +64,26 @@ export function ChatPanel() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setInput(suggestion);
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    try {
+      const data = JSON.parse(e.dataTransfer.getData("application/json"));
+      if (data.slug && data.title && data.path) {
+        setContextItems((prev) => {
+          if (prev.some((item) => item.slug === data.slug)) return prev;
+          return [...prev, { slug: data.slug, title: data.title, path: data.path }];
+        });
+      }
+    } catch {}
+  };
+
+  const removeContextItem = (slug: string) => {
+    setContextItems((prev) => prev.filter((item) => item.slug !== slug));
   };
 
   useEffect(() => {
@@ -89,7 +107,10 @@ export function ChatPanel() {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: [...messages, userMsg] }),
+      body: JSON.stringify({
+        messages: [...messages, userMsg],
+        context: contextItems.map((c) => c.path),
+      }),
     });
 
     if (!res.body) {
@@ -102,8 +123,8 @@ export function ChatPanel() {
 
     // Track the current reasoning block
     const reasoningId = `reasoning-${Date.now()}`;
-    let thoughts: string[] = [];
-    let tools: Record<string, ToolCall> = {};
+    const thoughts: string[] = [];
+    const tools: Record<string, ToolCall> = {};
     let hasReasoning = false;
 
     // Stream chunks and parse NDJSON
@@ -275,7 +296,7 @@ export function ChatPanel() {
           {messages.length === 0 ? (
             <div className="space-y-4">
               <p className="text-sm text-[var(--muted)]">
-                Ask anything about this site's contents. You can also virtually get to know me here!
+                Ask anything about this site&apos;s contents. You can also virtually get to know me here!
               </p>
             </div>
           ) : (
@@ -293,7 +314,7 @@ export function ChatPanel() {
                         {m.reasoning.tools.map((tool) => (
                           <Tool key={tool.id}>
                             <ToolHeader
-                              type={`${tool.name}` as any}
+                              type={`tool-${tool.name}` as `tool-${string}`}
                               state={tool.state}
                             />
                             <ToolContent>
@@ -351,7 +372,35 @@ export function ChatPanel() {
       </Conversation>
 
       <div className="p-3">
-        <div className="bg-background border border-border rounded-2xl overflow-hidden">
+        <div
+          className="bg-background border border-border rounded-2xl overflow-hidden"
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+        >
+          {contextItems.length > 0 && (
+            <div className="flex items-center gap-1.5 px-3 pt-3 overflow-hidden">
+              {contextItems.slice(0, 2).map((item) => (
+                <span
+                  key={item.slug}
+                  className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--accent)] text-[var(--ink)] rounded-full flex-shrink-0 max-w-[140px]"
+                >
+                  <span className="truncate">{item.title}</span>
+                  <button
+                    onClick={() => removeContextItem(item.slug)}
+                    className="hover:text-red-500 font-bold flex-shrink-0"
+                    type="button"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+              {contextItems.length > 2 && (
+                <span className="text-xs text-[var(--muted)] flex-shrink-0">
+                  +{contextItems.length - 2} more
+                </span>
+              )}
+            </div>
+          )}
           <div className="px-3 pt-3 pb-2">
             <form onSubmit={send}>
               <Textarea
@@ -381,7 +430,7 @@ export function ChatPanel() {
               type="submit"
               disabled={loading || !input.trim()}
               className="size-7 p-0 rounded-full bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
-              onClick={send as any}
+              onClick={(e) => send(e as unknown as FormEvent)}
             >
               <IconSend className="size-3 fill-primary" />
             </Button>

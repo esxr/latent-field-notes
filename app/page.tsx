@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
+import { DraggableRow } from "@/components/draggable-row";
 
 export const metadata: Metadata = {
   title: "Posts",
@@ -52,15 +53,17 @@ export default function Home() {
                     key={post.slug}
                     className="border-b border-dashed border-[var(--border-dashed)]"
                   >
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="flex items-baseline justify-between gap-4 py-4 text-base text-[var(--ink)]"
-                    >
-                      <span className="flex-1 font-normal">{post.title ?? post.slug}</span>
-                      <span className="flex-shrink-0 text-sm text-[var(--muted)]">
-                        {formatted}
-                      </span>
-                    </Link>
+                    <DraggableRow slug={post.slug} title={post.title ?? post.slug}>
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="flex items-baseline justify-between gap-4 py-4 text-base text-[var(--ink)]"
+                      >
+                        <span className="flex-1 font-normal">{post.title ?? post.slug}</span>
+                        <span className="flex-shrink-0 text-sm text-[var(--muted)]">
+                          {formatted}
+                        </span>
+                      </Link>
+                    </DraggableRow>
                   </li>
                 );
               })}

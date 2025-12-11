@@ -5,16 +5,22 @@ import {
   SidebarContent,
   SidebarHeader,
   SidebarRail,
-  SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { ChatPanel } from "./chat-panel";
 
 export function ChatSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { toggleSidebar } = useSidebar();
+
   return (
     <Sidebar side="right" {...props}>
-      <SidebarHeader className="flex flex-row items-center justify-between border-b border-sidebar-border px-4 py-3">
-        <h2 className="text-lg font-semibold invisible">Chat</h2>
-        <SidebarTrigger className="rotate-180" />
+      <SidebarHeader className="flex flex-row items-center justify-end border-b border-sidebar-border px-4 py-4">
+        <button
+          onClick={toggleSidebar}
+          className="font-mono text-xs bg-[var(--bg)] px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--ink)] transition-colors"
+        >
+          back
+        </button>
       </SidebarHeader>
       <SidebarContent className="chat-scope !overflow-hidden">
         <ChatPanel />

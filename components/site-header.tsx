@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export function SiteHeader() {
-  const { state } = useSidebar();
+  const { state, toggleSidebar, isMobile } = useSidebar();
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--panel)]">
@@ -22,7 +22,14 @@ export function SiteHeader() {
           <Link href="/about">
             About
           </Link>
-          {state === "collapsed" && <SidebarTrigger className="rotate-180" />}
+          {(isMobile || state === "collapsed") && (
+            <button
+              onClick={toggleSidebar}
+              className="font-mono text-xs bg-[var(--bg)] px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--ink)] transition-colors"
+            >
+              /chat
+            </button>
+          )}
         </nav>
       </div>
     </header>

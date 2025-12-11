@@ -76,7 +76,7 @@ export default function AboutPage() {
 
           return (
             <div key={category} className="flex flex-col gap-6">
-              <h2 className="text-2xl font-semibold text-[var(--ink)] border-b border-[var(--border)] pb-2">
+              <h2 className="text-2xl font-semibold text-[var(--ink)] pb-2">
                 {CATEGORY_LABELS[category]}
               </h2>
 

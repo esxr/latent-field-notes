@@ -379,24 +379,25 @@ export function ChatPanel() {
         >
           {contextItems.length > 0 && (
             <div className="flex items-center gap-1.5 px-3 pt-3 overflow-hidden">
-              {contextItems.slice(0, 2).map((item) => (
+              {contextItems.slice(0, 3).map((item) => (
                 <span
                   key={item.slug}
-                  className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--accent)] text-[var(--ink)] rounded-full flex-shrink-0 max-w-[140px]"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 text-xs bg-white border border-gray-200 text-gray-700 rounded-full flex-shrink-0 max-w-[100px]"
+                  title={item.title}
                 >
                   <span className="truncate">{item.title}</span>
                   <button
                     onClick={() => removeContextItem(item.slug)}
-                    className="hover:text-red-500 font-bold flex-shrink-0"
+                    className="text-gray-400 hover:text-red-500 font-bold flex-shrink-0"
                     type="button"
                   >
                     ×
                   </button>
                 </span>
               ))}
-              {contextItems.length > 2 && (
-                <span className="text-xs text-[var(--muted)] flex-shrink-0">
-                  +{contextItems.length - 2} more
+              {contextItems.length > 3 && (
+                <span className="text-xs text-gray-400 flex-shrink-0">
+                  +{contextItems.length - 3}
                 </span>
               )}
             </div>

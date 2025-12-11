@@ -66,6 +66,7 @@ export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) 
   const endRef = useRef<HTMLDivElement | null>(null);
   const lastPageContextRef = useRef<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleCopy = async (content: string, id: string) => {
     await navigator.clipboard.writeText(content);
@@ -111,6 +112,24 @@ export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Scroll textarea into view when iOS keyboard appears
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const handleResize = () => {
+      if (document.activeElement === textareaRef.current) {
+        textareaRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "end"
+        });
+      }
+    };
+
+    viewport.addEventListener("resize", handleResize);
+    return () => viewport.removeEventListener("resize", handleResize);
+  }, []);
 
   // Auto-set context when pageContext changes
   useEffect(() => {
@@ -458,11 +477,12 @@ export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) 
           <div className="px-3 pt-3 pb-2">
             <form onSubmit={send}>
               <Textarea
+                ref={textareaRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={loading ? "Working..." : "Ask anything"}
                 disabled={loading}
-                className="w-full bg-transparent! p-0 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground placeholder-muted-foreground resize-none border-none outline-none text-sm min-h-10 max-h-[25vh]"
+                className="w-full bg-transparent! p-0 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground placeholder-muted-foreground resize-none border-none outline-none text-base md:text-sm min-h-10 max-h-[25vh]"
                 rows={1}
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;

@@ -19,6 +19,92 @@ function isPathAllowed(path: string): boolean {
   );
 }
 
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+/**
+ * Compacts conversation history to manage context window.
+ * - If <= 4 messages: returns formatted history as-is
+ * - If > 4 messages: summarizes older messages (all but last 4), keeps recent 4 in full
+ */
+async function compactHistory(messages: Message[]): Promise<string> {
+  if (messages.length === 0) {
+    return "";
+  }
+
+  // If 4 or fewer messages, return formatted history without compaction
+  if (messages.length <= 4) {
+    return messages
+      .map((msg) => {
+        const speaker = msg.role === "user" ? "User" : "Pranav";
+        return `${speaker}: ${msg.content}`;
+      })
+      .join("\n\n");
+  }
+
+  // Split into older messages (to summarize) and recent messages (keep in full)
+  const olderMessages = messages.slice(0, -4);
+  const recentMessages = messages.slice(-4);
+
+  // Format older messages for summarization
+  const olderText = olderMessages
+    .map((msg) => {
+      const speaker = msg.role === "user" ? "User" : "Pranav";
+      return `${speaker}: ${msg.content}`;
+    })
+    .join("\n\n");
+
+  // Summarize older messages using Claude Haiku
+  try {
+    const summaryResponse = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY!,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-3-5-20241022",
+        max_tokens: 300,
+        messages: [
+          {
+            role: "user",
+            content: `Summarize this conversation in 2-3 sentences, capturing key topics and context:\n\n${olderText}`,
+          },
+        ],
+      }),
+    });
+
+    if (!summaryResponse.ok) {
+      throw new Error(`Failed to summarize: ${summaryResponse.statusText}`);
+    }
+
+    const summaryData = await summaryResponse.json();
+    const summary = summaryData.content?.[0]?.text || "Previous conversation context unavailable.";
+
+    // Format compacted history: [Summary] + recent messages
+    const recentText = recentMessages
+      .map((msg) => {
+        const speaker = msg.role === "user" ? "User" : "Pranav";
+        return `${speaker}: ${msg.content}`;
+      })
+      .join("\n\n");
+
+    return `[Earlier conversation summary: ${summary}]\n\n${recentText}`;
+  } catch (error) {
+    console.error("Error compacting history:", error);
+    // Fallback: just format all messages without summarization
+    return messages
+      .map((msg) => {
+        const speaker = msg.role === "user" ? "User" : "Pranav";
+        return `${speaker}: ${msg.content}`;
+      })
+      .join("\n\n");
+  }
+}
+
 export async function POST(req: Request) {
   const { messages, context } = await req.json();
   const userMessage = messages?.at(-1)?.content?.trim();
@@ -41,8 +127,20 @@ export async function POST(req: Request) {
         // Build persona-based system prompt with optional context
         const systemPrompt = buildSystemPrompt(context);
 
+        // Extract conversation history (all messages except the last one)
+        const history: Message[] = messages.slice(0, -1).map((msg: { role: string; content: string }) => ({
+          role: msg.role as "user" | "assistant",
+          content: msg.content,
+        }));
+
+        // Compact history and combine with current message
+        const compactedHistory = await compactHistory(history);
+        const promptWithHistory = compactedHistory
+          ? `${compactedHistory}\n\nUser: ${userMessage}`
+          : userMessage;
+
         for await (const message of query({
-          prompt: userMessage,
+          prompt: promptWithHistory,
           options: {
             model: "claude-sonnet-4-20250514",
             allowedTools: ["WebSearch", "WebFetch", "Read", "Glob", "Grep"],

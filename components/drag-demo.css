@@ -273,8 +273,7 @@
 
   /* Static illustration - no animations */
   .drag-demo__cursor,
-  .drag-demo__ghost,
-  .drag-demo__pill {
+  .drag-demo__ghost {
     display: none;
   }
 

@@ -108,7 +108,7 @@ export default async function AboutEntryPage({
         </section>
       )}
 
-      <RegisterChatContext slug={`storage/about/${slug}`} title={entry.title} />
+      <RegisterChatContext slug={`storage/about/${slug}`} title={entry.title ?? slug} />
     </article>
   );
 }

@@ -352,7 +352,7 @@ export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) 
                         {m.reasoning.tools.map((tool) => (
                           <Tool key={tool.id}>
                             <ToolHeader
-                              type={`tool-${tool.name}` as `tool-${string}`}
+                              type={tool.name}
                               state={tool.state}
                             />
                             <ToolContent>

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import {
   Conversation,
   ConversationContent,
@@ -29,6 +29,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { IconSend, IconCopy, IconCheck } from "@tabler/icons-react";
 import { useChatContext } from "./chat-context";
 
+export type ChatPanelHandle = {
+  resetChat: () => void;
+};
+
 type ToolCall = {
   id: string;
   name: string;
@@ -51,7 +55,7 @@ type ChatMessage = {
 };
 
 // Lightweight chat panel that streams the /api/chat response with Claude Agent SDK
-export function ChatPanel() {
+export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) {
   const { pageContext } = useChatContext();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -88,6 +92,16 @@ export function ChatPanel() {
   const removeContextItem = (slug: string) => {
     setContextItems((prev) => prev.filter((item) => item.slug !== slug));
   };
+
+  const handleNewChat = () => {
+    setMessages([]);
+    setContextItems([]);
+    lastPageContextRef.current = null;
+  };
+
+  useImperativeHandle(ref, () => ({
+    resetChat: handleNewChat,
+  }));
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -314,8 +328,11 @@ export function ChatPanel() {
         <ConversationContent>
           {messages.length === 0 ? (
             <div className="space-y-4">
-              <p className="text-sm text-[var(--muted)]">
-                Ask anything about this site&apos;s contents. You can also virtually get to know me here!
+              <p className="text-lg text-[var(--muted)]">
+                Ask my virtual version anything here! I'll use my internal knowledge.
+              </p>
+              <p className="text-lg text-[var(--muted)]">
+                You can <b>Drag-n-drop</b> elements from the site into the chat to provide focused context.
               </p>
             </div>
           ) : (
@@ -459,4 +476,4 @@ export function ChatPanel() {
       </div>
     </div>
   );
-}
+});

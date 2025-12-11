@@ -31,44 +31,9 @@ export async function POST(req: Request) {
       const encoder = new TextEncoder();
 
       try {
-        const fs = await import("fs");
-        const path = await import("path");
-
-        console.log("[DEBUG] Starting query with message:", userMessage);
-        console.log("[DEBUG] Environment check:");
-        console.log("  - NODE_ENV:", process.env.NODE_ENV);
-        console.log("  - CWD:", process.cwd());
-        console.log("  - ANTHROPIC_API_KEY present:", !!process.env.ANTHROPIC_API_KEY);
-
-        // Check if CLI exists
-        const cliPath = path.join(process.cwd(), "node_modules", "@anthropic-ai", "claude-agent-sdk", "cli.js");
-        const cliExists = fs.existsSync(cliPath);
-        console.log("[DEBUG] CLI path:", cliPath);
-        console.log("[DEBUG] CLI exists:", cliExists);
-        if (cliExists) {
-          const stats = fs.statSync(cliPath);
-          console.log("[DEBUG] CLI size:", stats.size, "bytes");
-          console.log("[DEBUG] CLI is executable:", !!(stats.mode & 0o111));
-        }
-
-        // Check /tmp directory
-        const tmpWritable = fs.existsSync("/tmp");
-        console.log("[DEBUG] /tmp exists:", tmpWritable);
-        if (tmpWritable) {
-          try {
-            const testFile = "/tmp/.claude-test";
-            fs.writeFileSync(testFile, "test");
-            fs.unlinkSync(testFile);
-            console.log("[DEBUG] /tmp is writable");
-          } catch (e) {
-            console.log("[DEBUG] /tmp write test failed:", e);
-          }
-        }
-
-        // Set HOME to /tmp if not set (Claude CLI might need this)
+        // Set HOME to /tmp if not set (required for Claude Agent SDK in serverless environments)
         if (!process.env.HOME) {
           process.env.HOME = "/tmp";
-          console.log("[DEBUG] Set HOME to /tmp");
         }
 
         for await (const message of query({
@@ -104,14 +69,11 @@ export async function POST(req: Request) {
             },
           },
         })) {
-          console.log("[DEBUG] Received message type:", message.type);
           // Stream each message as newline-delimited JSON
           controller.enqueue(encoder.encode(JSON.stringify(message) + "\n"));
         }
       } catch (error) {
-        console.error("[ERROR] Chat API error:", error);
-        console.error("[ERROR] Stack:", error instanceof Error ? error.stack : "N/A");
-        controller.enqueue(encoder.encode(JSON.stringify({ type: "error", error: String(error), stack: error instanceof Error ? error.stack : undefined }) + "\n"));
+        controller.enqueue(encoder.encode(JSON.stringify({ type: "error", error: String(error) }) + "\n"));
       }
 
       controller.close();

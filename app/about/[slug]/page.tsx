@@ -51,17 +51,18 @@ export default async function AboutEntryPage({
     notFound();
   }
 
-  const shortDate =
-    entry.date && !Number.isNaN(new Date(entry.date).getTime())
-      ? new Intl.DateTimeFormat("en", {
-          month: "short",
-          day: "numeric",
-        }).format(new Date(entry.date))
-      : "";
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    if (Number.isNaN(date.getTime())) return "";
+    return new Intl.DateTimeFormat("en", {
+      month: "short",
+      year: "numeric",
+    }).format(date);
+  };
 
-  const year = entry.date
-    ? new Date(entry.date).getFullYear()
-    : "";
+  const fromFormatted = entry.from ? formatDate(entry.from) : "";
+  const toFormatted = entry.to ? formatDate(entry.to) : "Present";
+  const dateRange = fromFormatted ? `${fromFormatted} – ${toFormatted}` : "";
 
   return (
     <article className="page-shell flex flex-col gap-8">
@@ -74,12 +75,21 @@ export default async function AboutEntryPage({
 
       <header className="flex flex-col gap-2">
         <p className="text-sm uppercase tracking-[0.14em] text-[var(--muted)]">
-          {shortDate && year && `${shortDate}, ${year}`}
+          {dateRange}
           {entry.category && ` · ${entry.category}`}
         </p>
-        <h1 className="text-4xl font-extrabold leading-tight text-[var(--ink)] sm:text-[2.625rem]">
-          {entry.title}
-        </h1>
+        <div className="flex items-start sm:items-center gap-3">
+          {entry.icon && (
+            <img
+              src={entry.icon}
+              alt=""
+              className="w-10 h-10 rounded object-contain flex-shrink-0"
+            />
+          )}
+          <h1 className="text-2xl sm:text-4xl font-extrabold leading-tight text-[var(--ink)]">
+            {entry.title}
+          </h1>
+        </div>
       </header>
 
       <Markdown content={entry.content} />

@@ -6,10 +6,12 @@ export type AboutCategory = "experience" | "education" | "certificates";
 
 export type AboutFrontmatter = {
   title?: string;
-  date?: string;
+  from?: string;
+  to?: string;
   description?: string;
   category?: AboutCategory;
   tags?: string[];
+  icon?: string;
   draft?: boolean;
 };
 
@@ -52,11 +54,13 @@ export function getAboutEntryBySlug(slug: string): AboutEntry {
     slug,
     content,
     title: (data.title as string | undefined) ?? fallbackTitle,
-    date: data.date as string | undefined,
+    from: data.from as string | undefined,
+    to: data.to as string | undefined,
     description:
       (data.description as string | undefined) ?? paragraphMatch ?? "",
     category: data.category as AboutCategory | undefined,
     tags: (data.tags as string[] | undefined) ?? [],
+    icon: data.icon as string | undefined,
     draft: Boolean(data.draft),
   };
 }
@@ -70,8 +74,8 @@ export function getAllAboutEntries(): AboutEntry[] {
     .map(getAboutEntryBySlug)
     .filter((entry) => !entry.draft)
     .sort((a, b) => {
-      if (!a.date || !b.date) return 0;
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
+      if (!a.from || !b.from) return 0;
+      return new Date(b.from).getTime() - new Date(a.from).getTime();
     });
 }
 

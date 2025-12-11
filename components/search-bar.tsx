@@ -59,7 +59,7 @@ export function SearchBar({
 
   const handleSelect = (item: SearchResult) => {
     if (onSelect) onSelect(item);
-    router.push(`/blog/${item.slug}`);
+    router.push(`/${item.slug}`);
   };
 
   const hasResults = useMemo(() => results.length > 0, [results]);

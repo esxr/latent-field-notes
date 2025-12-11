@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import { DraggableRow } from "@/components/draggable-row";
+import { PageNav } from "@/components/page-nav";
 
 export const metadata: Metadata = {
   title: "Posts",
@@ -32,7 +33,9 @@ export default function Home() {
   return (
     <section className="page-shell flex flex-col gap-10">
       <header>
-        <h1 className="mb-6 mt-2">Posts</h1>
+        <div className="mb-6 mt-2">
+          <PageNav active="posts" />
+        </div>
       </header>
 
       <div className="flex flex-col gap-10">
@@ -55,7 +58,7 @@ export default function Home() {
                   >
                     <DraggableRow slug={post.slug} title={post.title ?? post.slug}>
                       <Link
-                        href={`/blog/${post.slug}`}
+                        href={`/${post.slug}`}
                         className="flex items-baseline justify-between gap-4 py-4 text-base text-[var(--ink)]"
                       >
                         <span className="flex-1 font-normal">{post.title ?? post.slug}</span>

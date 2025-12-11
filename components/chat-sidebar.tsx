@@ -19,13 +19,13 @@ export function ChatSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) 
       <SidebarHeader className="flex flex-row items-center justify-between border-b border-sidebar-border px-4 py-4">
         <button
           onClick={() => chatPanelRef.current?.resetChat()}
-          className="font-mono text-xs bg-[var(--bg)] px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--ink)] transition-colors"
+          className="font-mono text-md bg-[var(--bg)] px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--ink)] transition-colors"
         >
           + new chat
         </button>
         <button
           onClick={toggleSidebar}
-          className="font-mono text-xs bg-[var(--bg)] px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--ink)] transition-colors"
+          className="font-mono text-md bg-[var(--bg)] px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--ink)] transition-colors"
         >
           back
         </button>

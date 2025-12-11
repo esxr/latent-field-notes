@@ -16,16 +16,10 @@ export function SiteHeader() {
           Pranav Dhoolia
         </Link>
         <nav className="flex items-center gap-5 text-sm text-[var(--ink)]">
-          <Link href="/">
-            Posts
-          </Link>
-          <Link href="/about">
-            About
-          </Link>
           {(isMobile || state === "collapsed") && (
             <button
               onClick={toggleSidebar}
-              className="font-mono text-xs bg-[var(--bg)] px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--ink)] transition-colors"
+              className="font-mono text-md bg-[var(--bg)] px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--ink)] transition-colors"
             >
               /chat
             </button>

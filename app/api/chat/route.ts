@@ -1,4 +1,5 @@
 import { query } from "@anthropic-ai/claude-agent-sdk";
+import { getMcpServers } from "@/lib/mcp";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -54,6 +55,7 @@ export async function POST(req: Request) {
             allowedTools: ["WebSearch", "WebFetch", "Read", "Glob", "Grep"],
             maxTurns: 10,
             systemPrompt,
+            mcpServers: getMcpServers(),
 
             canUseTool: async (
               toolName: string,

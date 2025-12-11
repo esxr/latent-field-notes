@@ -5,6 +5,7 @@ import { getAllAboutEntries, getAboutSummary, type AboutCategory } from "@/lib/a
 import { Markdown } from "@/components/markdown";
 import { DraggableRow } from "@/components/draggable-row";
 import { RegisterChatContext } from "@/components/register-chat-context";
+import { PageNav } from "@/components/page-nav";
 
 export const metadata: Metadata = {
   title: "About",
@@ -63,6 +64,7 @@ export default function AboutPage() {
 
   return (
     <section className="page-shell flex flex-col gap-10">
+      <PageNav active="about" />
       {summary && (
         <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
           <Markdown content={summary} stripFirstHeading={false} />

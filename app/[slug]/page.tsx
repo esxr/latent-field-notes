@@ -65,7 +65,7 @@ export default async function BlogPostPage({
   return (
     <article className="page-shell flex flex-col gap-8">
       <div className="flex items-center gap-3 text-sm text-[var(--muted)]">
-        <Link href="/blog" className="inline-flex items-center gap-2 hover:underline">
+        <Link href="/" className="inline-flex items-center gap-2 hover:underline">
           <ArrowLeft className="h-4 w-4" />
           Posts
         </Link>

@@ -27,7 +27,7 @@ export function PostCard({ post, variant = "list" }: PostCardProps) {
 
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={`/${post.slug}`}
       className={`group relative block overflow-hidden bg-[var(--panel)] border border-[var(--border)] shadow-[0_0_0_1px_rgba(23,23,23,0.03)] ${
         isFeatured ? "rounded-2xl" : "rounded-xl"
       }`}

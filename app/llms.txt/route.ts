@@ -29,7 +29,7 @@ export async function GET() {
     "",
     "## Primary entry points",
     siteUrl ? `- [Home](${siteUrl})` : "- [Home](/)",
-    `- [Blog index](${siteUrl ? `${siteUrl}/blog` : "/blog"}): HTML list of published posts.`,
+    `- [Posts index](${siteUrl || "/"}): HTML list of published posts.`,
     `- [Chat assistant](${siteUrl ? `${siteUrl}/chat` : "/chat"}): RAG answers grounded in the markdown posts.`,
   ];
 

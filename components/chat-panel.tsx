@@ -65,6 +65,7 @@ export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) 
   const [contextItems, setContextItems] = useState<Array<{ slug: string; title: string; path: string }>>([]);
   const endRef = useRef<HTMLDivElement | null>(null);
   const lastPageContextRef = useRef<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const handleCopy = async (content: string, id: string) => {
     await navigator.clipboard.writeText(content);
@@ -95,8 +96,11 @@ export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) 
   };
 
   const handleNewChat = () => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
     setMessages([]);
     setContextItems([]);
+    setLoading(false);
     lastPageContextRef.current = null;
   };
 
@@ -138,6 +142,8 @@ export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) 
     setInput("");
     setLoading(true);
 
+    abortControllerRef.current = new AbortController();
+
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -145,6 +151,7 @@ export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) 
         messages: [...messages, userMsg],
         context: contextItems.map((c) => c.path),
       }),
+      signal: abortControllerRef.current.signal,
     });
 
     if (!res.body) {
@@ -163,161 +170,169 @@ export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) 
 
     // Stream chunks and parse NDJSON
     let buffer = "";
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
 
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split("\n");
-      buffer = lines.pop() || "";
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
 
-      for (const line of lines) {
-        if (!line.trim()) continue;
+        for (const line of lines) {
+          if (!line.trim()) continue;
 
-        try {
-          const message = JSON.parse(line);
+          try {
+            const message = JSON.parse(line);
 
-          if (message.type === "assistant" && message.message?.content) {
-            for (const block of message.message.content) {
-              if (block.type === "text" && block.text) {
-                // Add intermediate thought
-                thoughts.push(block.text);
-                hasReasoning = true;
+            if (message.type === "assistant" && message.message?.content) {
+              for (const block of message.message.content) {
+                if (block.type === "text" && block.text) {
+                  // Add intermediate thought
+                  thoughts.push(block.text);
+                  hasReasoning = true;
 
+                  setMessages((prev) => {
+                    const next = [...prev];
+                    const idx = next.findIndex(m => m.id === reasoningId);
+                    if (idx >= 0) {
+                      next[idx] = {
+                        ...next[idx],
+                        reasoning: {
+                          thoughts: [...thoughts],
+                          tools: Object.values(tools),
+                          isStreaming: true,
+                        },
+                      };
+                      return next;
+                    }
+                    return [
+                      ...next,
+                      {
+                        id: reasoningId,
+                        role: "reasoning",
+                        content: "",
+                        reasoning: {
+                          thoughts: [...thoughts],
+                          tools: Object.values(tools),
+                          isStreaming: true,
+                        },
+                      },
+                    ];
+                  });
+                } else if (block.type === "tool_use") {
+                  // Add tool call to reasoning
+                  tools[block.id] = {
+                    id: block.id,
+                    name: block.name,
+                    state: "input-available",
+                    input: block.input,
+                  };
+                  hasReasoning = true;
+
+                  setMessages((prev) => {
+                    const next = [...prev];
+                    const idx = next.findIndex(m => m.id === reasoningId);
+                    if (idx >= 0) {
+                      next[idx] = {
+                        ...next[idx],
+                        reasoning: {
+                          thoughts: [...thoughts],
+                          tools: Object.values(tools),
+                          isStreaming: true,
+                        },
+                      };
+                      return next;
+                    }
+                    return [
+                      ...next,
+                      {
+                        id: reasoningId,
+                        role: "reasoning",
+                        content: "",
+                        reasoning: {
+                          thoughts: [...thoughts],
+                          tools: Object.values(tools),
+                          isStreaming: true,
+                        },
+                      },
+                    ];
+                  });
+                }
+              }
+            } else if (message.type === "result") {
+              // Final result - mark reasoning as done and add final response
+              if (hasReasoning) {
                 setMessages((prev) => {
                   const next = [...prev];
                   const idx = next.findIndex(m => m.id === reasoningId);
-                  if (idx >= 0) {
+                  if (idx >= 0 && next[idx].reasoning) {
                     next[idx] = {
                       ...next[idx],
                       reasoning: {
-                        thoughts: [...thoughts],
-                        tools: Object.values(tools),
-                        isStreaming: true,
+                        ...next[idx].reasoning!,
+                        isStreaming: false,
                       },
                     };
-                    return next;
                   }
-                  return [
-                    ...next,
-                    {
-                      id: reasoningId,
-                      role: "reasoning",
-                      content: "",
-                      reasoning: {
-                        thoughts: [...thoughts],
-                        tools: Object.values(tools),
-                        isStreaming: true,
-                      },
-                    },
-                  ];
-                });
-              } else if (block.type === "tool_use") {
-                // Add tool call to reasoning
-                tools[block.id] = {
-                  id: block.id,
-                  name: block.name,
-                  state: "input-available",
-                  input: block.input,
-                };
-                hasReasoning = true;
-
-                setMessages((prev) => {
-                  const next = [...prev];
-                  const idx = next.findIndex(m => m.id === reasoningId);
-                  if (idx >= 0) {
-                    next[idx] = {
-                      ...next[idx],
-                      reasoning: {
-                        thoughts: [...thoughts],
-                        tools: Object.values(tools),
-                        isStreaming: true,
-                      },
-                    };
-                    return next;
-                  }
-                  return [
-                    ...next,
-                    {
-                      id: reasoningId,
-                      role: "reasoning",
-                      content: "",
-                      reasoning: {
-                        thoughts: [...thoughts],
-                        tools: Object.values(tools),
-                        isStreaming: true,
-                      },
-                    },
-                  ];
+                  return next;
                 });
               }
-            }
-          } else if (message.type === "result") {
-            // Final result - mark reasoning as done and add final response
-            if (hasReasoning) {
-              setMessages((prev) => {
-                const next = [...prev];
-                const idx = next.findIndex(m => m.id === reasoningId);
-                if (idx >= 0 && next[idx].reasoning) {
-                  next[idx] = {
-                    ...next[idx],
-                    reasoning: {
-                      ...next[idx].reasoning!,
-                      isStreaming: false,
-                    },
-                  };
-                }
-                return next;
-              });
-            }
 
-            if (message.result) {
+              if (message.result) {
+                setMessages((prev) => [
+                  ...prev,
+                  { id: `result-${Date.now()}`, role: "assistant", content: message.result },
+                ]);
+              }
+            } else if (message.type === "tool_result") {
+              // Update tool with result
+              if (message.tool_use_id && tools[message.tool_use_id]) {
+                const toolOutput = typeof message.content === "string"
+                  ? message.content
+                  : JSON.stringify(message.content);
+                const isError = message.is_error;
+
+                tools[message.tool_use_id] = {
+                  ...tools[message.tool_use_id],
+                  state: isError ? "output-error" : "output-available",
+                  output: toolOutput,
+                  errorText: isError ? toolOutput : undefined,
+                };
+
+                setMessages((prev) => {
+                  const next = [...prev];
+                  const idx = next.findIndex(m => m.id === reasoningId);
+                  if (idx >= 0 && next[idx].reasoning) {
+                    next[idx] = {
+                      ...next[idx],
+                      reasoning: {
+                        ...next[idx].reasoning!,
+                        tools: Object.values(tools),
+                      },
+                    };
+                  }
+                  return next;
+                });
+              }
+            } else if (message.type === "error") {
+              console.error("Chat error:", message.error);
               setMessages((prev) => [
                 ...prev,
-                { id: `result-${Date.now()}`, role: "assistant", content: message.result },
+                { id: `error-${Date.now()}`, role: "assistant", content: `Error: ${message.error}` },
               ]);
             }
-          } else if (message.type === "tool_result") {
-            // Update tool with result
-            if (message.tool_use_id && tools[message.tool_use_id]) {
-              const toolOutput = typeof message.content === "string"
-                ? message.content
-                : JSON.stringify(message.content);
-              const isError = message.is_error;
-
-              tools[message.tool_use_id] = {
-                ...tools[message.tool_use_id],
-                state: isError ? "output-error" : "output-available",
-                output: toolOutput,
-                errorText: isError ? toolOutput : undefined,
-              };
-
-              setMessages((prev) => {
-                const next = [...prev];
-                const idx = next.findIndex(m => m.id === reasoningId);
-                if (idx >= 0 && next[idx].reasoning) {
-                  next[idx] = {
-                    ...next[idx],
-                    reasoning: {
-                      ...next[idx].reasoning!,
-                      tools: Object.values(tools),
-                    },
-                  };
-                }
-                return next;
-              });
-            }
-          } else if (message.type === "error") {
-            console.error("Chat error:", message.error);
-            setMessages((prev) => [
-              ...prev,
-              { id: `error-${Date.now()}`, role: "assistant", content: `Error: ${message.error}` },
-            ]);
+          } catch (err) {
+            console.error("Failed to parse message:", line, err);
           }
-        } catch (err) {
-          console.error("Failed to parse message:", line, err);
         }
       }
+    } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        // User clicked "new chat" - silently ignore
+        return;
+      }
+      throw err;
     }
 
     setLoading(false);

@@ -194,6 +194,7 @@ code::selection {
   font-family: "Inter", "Inter UI", var(--font-ui), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.54;
   letter-spacing: 0.06em;
+  overflow-x: hidden;
 }
 
 .article-body h1,
@@ -274,6 +275,28 @@ code::selection {
 }
 
 @media (max-width: 684px) {
+  /* Mobile typography adjustments - following Medium.com standards */
+  body {
+    font-size: 15px;
+    letter-spacing: 0.03em;
+    line-height: 1.6;
+  }
+
+  .article-body p,
+  .page-shell > p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .article-body pre {
+    font-size: 0.8rem;
+    padding: 14px;
+  }
+
+  .article-body code {
+    font-size: 0.85rem;
+  }
+
   .article-body ul,
   .article-body ol {
     margin-left: 20px;

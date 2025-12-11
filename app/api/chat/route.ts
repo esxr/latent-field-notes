@@ -51,6 +51,26 @@ export async function POST(req: Request) {
           console.log("[DEBUG] CLI is executable:", !!(stats.mode & 0o111));
         }
 
+        // Check /tmp directory
+        const tmpWritable = fs.existsSync("/tmp");
+        console.log("[DEBUG] /tmp exists:", tmpWritable);
+        if (tmpWritable) {
+          try {
+            const testFile = "/tmp/.claude-test";
+            fs.writeFileSync(testFile, "test");
+            fs.unlinkSync(testFile);
+            console.log("[DEBUG] /tmp is writable");
+          } catch (e) {
+            console.log("[DEBUG] /tmp write test failed:", e);
+          }
+        }
+
+        // Set HOME to /tmp if not set (Claude CLI might need this)
+        if (!process.env.HOME) {
+          process.env.HOME = "/tmp";
+          console.log("[DEBUG] Set HOME to /tmp");
+        }
+
         for await (const message of query({
           prompt: userMessage,
           options: {

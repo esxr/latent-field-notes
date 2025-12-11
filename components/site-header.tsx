@@ -19,9 +19,9 @@ export function SiteHeader() {
           {(isMobile || state === "collapsed") && (
             <button
               onClick={toggleSidebar}
-              className="font-mono text-md bg-[var(--bg)] px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--ink)] transition-colors"
+              className="font-mono text-md bg-[var(--ink)] text-[var(--bg)] px-3 py-1.5 rounded hover:opacity-90 transition-opacity"
             >
-              /chat
+              Chat With Me!
             </button>
           )}
         </nav>

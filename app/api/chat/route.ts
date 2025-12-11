@@ -1,5 +1,6 @@
 import { query } from "@anthropic-ai/claude-agent-sdk";
 import { getMcpServers } from "@/lib/mcp";
+import { buildSystemPrompt } from "@/lib/prompts/pranav-persona";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -37,16 +38,8 @@ export async function POST(req: Request) {
           process.env.HOME = "/tmp";
         }
 
-        // Build system prompt with optional context
-        let systemPrompt =
-          "You can search the web and read local blog files in the ./blogs/ directory. You can also use the ./storage/ directory for any file operations.";
-
-        if (context && context.length > 0) {
-          const fileList = context
-            .map((filePath: string) => `./${filePath}`)
-            .join(", ");
-          systemPrompt += ` The user has selected specific content for context. Focus primarily on these files: ${fileList}. Use the Read tool to access their content.`;
-        }
+        // Build persona-based system prompt with optional context
+        const systemPrompt = buildSystemPrompt(context);
 
         for await (const message of query({
           prompt: userMessage,

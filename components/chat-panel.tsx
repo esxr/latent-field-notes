@@ -27,6 +27,7 @@ import { Actions, Action } from "@/components/ui/shadcn-io/ai/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { IconSend, IconCopy, IconCheck } from "@tabler/icons-react";
+import { useChatContext } from "./chat-context";
 
 type ToolCall = {
   id: string;
@@ -51,12 +52,14 @@ type ChatMessage = {
 
 // Lightweight chat panel that streams the /api/chat response with Claude Agent SDK
 export function ChatPanel() {
+  const { pageContext } = useChatContext();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [contextItems, setContextItems] = useState<Array<{ slug: string; title: string; path: string }>>([]);
   const endRef = useRef<HTMLDivElement | null>(null);
+  const lastPageContextRef = useRef<string | null>(null);
 
   const handleCopy = async (content: string, id: string) => {
     await navigator.clipboard.writeText(content);
@@ -89,6 +92,22 @@ export function ChatPanel() {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Auto-set context when pageContext changes
+  useEffect(() => {
+    if (pageContext && pageContext.slug !== lastPageContextRef.current) {
+      lastPageContextRef.current = pageContext.slug;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setContextItems((prev) => {
+        // Only update if this context isn't already present
+        if (prev.some(c => c.slug === pageContext.slug)) return prev;
+        return [{ slug: pageContext.slug, title: pageContext.title, path: `/blogs/${pageContext.slug}.md` }];
+      });
+    } else if (!pageContext && lastPageContextRef.current) {
+      lastPageContextRef.current = null;
+      setContextItems(() => []);
+    }
+  }, [pageContext]);
 
   const send = async (e: FormEvent) => {
     e.preventDefault();

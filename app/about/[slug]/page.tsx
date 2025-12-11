@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Markdown } from "@/components/markdown";
 import { getAllAboutSlugs, getAboutEntryBySlug } from "@/lib/about";
+import { RegisterChatContext } from "@/components/register-chat-context";
 
 type AboutEntryPageParams = Promise<{ slug: string }>;
 
@@ -106,6 +107,8 @@ export default async function AboutEntryPage({
           ))}
         </section>
       )}
+
+      <RegisterChatContext slug={`storage/about/${slug}`} title={entry.title} />
     </article>
   );
 }

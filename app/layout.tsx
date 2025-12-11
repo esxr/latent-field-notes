@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ChatSidebar } from "@/components/chat-sidebar";
+import { ChatContextProvider } from "@/components/chat-context";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -37,16 +38,18 @@ export default function RootLayout({
       <body
         className={`${uiSans.variable} ${mono.variable} bg-[var(--bg)] text-[var(--ink)] antialiased`}
       >
-        <SidebarProvider defaultOpen={false}>
-          <SidebarInset>
-            <SiteHeader />
-            <main className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-5 pb-16 pt-10 sm:px-7">
-              {children}
-            </main>
-            <SiteFooter />
-          </SidebarInset>
-          <ChatSidebar />
-        </SidebarProvider>
+        <ChatContextProvider>
+          <SidebarProvider defaultOpen={false}>
+            <SidebarInset>
+              <SiteHeader />
+              <main className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-5 pb-16 pt-10 sm:px-7">
+                {children}
+              </main>
+              <SiteFooter />
+            </SidebarInset>
+            <ChatSidebar />
+          </SidebarProvider>
+        </ChatContextProvider>
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { getAllAboutEntries, getAboutSummary, type AboutCategory } from "@/lib/about";
 import { Markdown } from "@/components/markdown";
 import { DraggableRow } from "@/components/draggable-row";
+import { RegisterChatContext } from "@/components/register-chat-context";
 
 export const metadata: Metadata = {
   title: "About",
@@ -152,6 +153,8 @@ export default function AboutPage() {
           );
         })}
       </div>
+
+      <RegisterChatContext slug="storage/about/_summary" title="About Pranav Dhoolia" />
     </section>
   );
 }

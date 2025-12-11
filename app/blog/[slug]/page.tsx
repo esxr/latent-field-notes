@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Comments } from "@/components/comments";
 import { Markdown } from "@/components/markdown";
 import { formatDate, getAllPostSlugs, getPostBySlug } from "@/lib/blog";
+import { RegisterChatContext } from "@/components/register-chat-context";
 
 type BlogPageParams = Promise<{ slug: string }>;
 
@@ -95,6 +96,8 @@ export default async function BlogPostPage({
           <Comments />
         </div>
       </section>
+
+      <RegisterChatContext slug={slug} title={post.title ?? slug} />
     </article>
   );
 }

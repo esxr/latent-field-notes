@@ -31,11 +31,25 @@ export async function POST(req: Request) {
       const encoder = new TextEncoder();
 
       try {
+        const fs = await import("fs");
+        const path = await import("path");
+
         console.log("[DEBUG] Starting query with message:", userMessage);
         console.log("[DEBUG] Environment check:");
         console.log("  - NODE_ENV:", process.env.NODE_ENV);
         console.log("  - CWD:", process.cwd());
         console.log("  - ANTHROPIC_API_KEY present:", !!process.env.ANTHROPIC_API_KEY);
+
+        // Check if CLI exists
+        const cliPath = path.join(process.cwd(), "node_modules", "@anthropic-ai", "claude-agent-sdk", "cli.js");
+        const cliExists = fs.existsSync(cliPath);
+        console.log("[DEBUG] CLI path:", cliPath);
+        console.log("[DEBUG] CLI exists:", cliExists);
+        if (cliExists) {
+          const stats = fs.statSync(cliPath);
+          console.log("[DEBUG] CLI size:", stats.size, "bytes");
+          console.log("[DEBUG] CLI is executable:", !!(stats.mode & 0o111));
+        }
 
         for await (const message of query({
           prompt: userMessage,

@@ -1,0 +1,285 @@
+/* Drag-and-drop tutorial animation - scoped to prevent conflicts */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Container */
+  .drag-demo {
+    position: relative;
+    width: 240px;
+    height: 140px;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  /* Layout: Left panel with blog posts */
+  .drag-demo__left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 110px;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Blog post skeleton bars */
+  .drag-demo__post {
+    height: 20px;
+    background: var(--muted);
+    border-radius: 4px;
+    opacity: 0.3;
+    transition: opacity 0.3s;
+  }
+
+  .drag-demo__post--active {
+    opacity: 0.7;
+    background: var(--accent);
+    animation: drag-demo-highlight 4s infinite;
+  }
+
+  /* Vertical divider */
+  .drag-demo__divider {
+    position: absolute;
+    left: 110px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  /* Right panel: Chat input */
+  .drag-demo__right {
+    position: absolute;
+    left: 118px;
+    right: 8px;
+    top: 0;
+    bottom: 0;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  /* Chat input skeleton */
+  .drag-demo__input {
+    height: 32px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    position: relative;
+  }
+
+  /* Animated cursor */
+  .drag-demo__cursor {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+    z-index: 10;
+    animation: drag-demo-cursor 4s infinite;
+  }
+
+  .drag-demo__cursor-icon {
+    width: 100%;
+    height: 100%;
+    fill: var(--ink);
+    opacity: 0.8;
+  }
+
+  /* Ghost element (the dragged post) */
+  .drag-demo__ghost {
+    position: absolute;
+    height: 20px;
+    width: 94px;
+    background: var(--accent);
+    border-radius: 4px;
+    opacity: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: drag-demo-ghost 4s infinite;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* Animation keyframes */
+
+  /* Highlight active post */
+  @keyframes drag-demo-highlight {
+    0%, 12.5% {
+      opacity: 0.3;
+    }
+    12.5%, 75% {
+      opacity: 0.7;
+    }
+    75%, 100% {
+      opacity: 0.3;
+    }
+  }
+
+  /* Cursor movement and state changes */
+  @keyframes drag-demo-cursor {
+    /* Idle: rest near blog list */
+    0%, 12.5% {
+      left: 20px;
+      top: 55px;
+      transform: rotate(0deg);
+    }
+    /* Move to active post */
+    12.5%, 25% {
+      left: 50px;
+      top: 50px;
+      transform: rotate(0deg);
+    }
+    /* Grab: cursor changes to grab hand */
+    25%, 30% {
+      left: 50px;
+      top: 50px;
+      transform: rotate(-10deg);
+    }
+    /* Drag right */
+    30%, 62.5% {
+      left: 160px;
+      top: 110px;
+      transform: rotate(-5deg);
+    }
+    /* Drop: release */
+    62.5%, 75% {
+      left: 160px;
+      top: 110px;
+      transform: rotate(0deg);
+    }
+    /* Return to start */
+    75%, 87.5% {
+      left: 20px;
+      top: 55px;
+      transform: rotate(0deg);
+    }
+    /* Wait for reset */
+    87.5%, 100% {
+      left: 20px;
+      top: 55px;
+      transform: rotate(0deg);
+    }
+  }
+
+  /* Ghost post movement */
+  @keyframes drag-demo-ghost {
+    /* Hidden */
+    0%, 25% {
+      left: 8px;
+      top: 44px;
+      opacity: 0;
+      transform: scale(1);
+    }
+    /* Appear on grab */
+    25%, 30% {
+      left: 8px;
+      top: 44px;
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    /* Drag right */
+    30%, 62.5% {
+      left: 118px;
+      top: 104px;
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    /* Shrink into pill */
+    62.5%, 75% {
+      left: 126px;
+      top: 106px;
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    /* Reset */
+    75%, 100% {
+      left: 8px;
+      top: 44px;
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+
+}
+
+/* Fallback for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .drag-demo {
+    position: relative;
+    width: 240px;
+    height: 140px;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .drag-demo__left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 110px;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .drag-demo__post {
+    height: 20px;
+    background: var(--muted);
+    border-radius: 4px;
+    opacity: 0.3;
+  }
+
+  .drag-demo__divider {
+    position: absolute;
+    left: 110px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .drag-demo__right {
+    position: absolute;
+    left: 118px;
+    right: 8px;
+    top: 0;
+    bottom: 0;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .drag-demo__input {
+    height: 32px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  /* Static illustration - no animations */
+  .drag-demo__cursor,
+  .drag-demo__ghost,
+  .drag-demo__pill {
+    display: none;
+  }
+
+  .drag-demo__post--active {
+    opacity: 0.5;
+    background: var(--accent);
+  }
+}

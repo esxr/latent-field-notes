@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { IconSend, IconCopy, IconCheck } from "@tabler/icons-react";
 import { useChatContext } from "./chat-context";
+import { DragDemo } from "./drag-demo";
 
 export type ChatPanelHandle = {
   resetChat: () => void;
@@ -328,12 +329,13 @@ export const ChatPanel = forwardRef<ChatPanelHandle>(function ChatPanel(_, ref) 
         <ConversationContent>
           {messages.length === 0 ? (
             <div className="space-y-4">
-              <p className="text-lg text-[var(--muted)]">
-                Ask my virtual version anything here! I'll use my internal knowledge.
+              <p className="text-sm text-[var(--muted)]">
+                Ask my virtual version anything here! I&apos;ll use my internal knowledge.
               </p>
-              <p className="text-lg text-[var(--muted)]">
+              <p className="text-sm text-[var(--muted)]">
                 You can <b>Drag-n-drop</b> elements from the site into the chat to provide focused context.
               </p>
+              <DragDemo />
             </div>
           ) : (
             messages.map((m) => {

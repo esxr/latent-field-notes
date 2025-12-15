@@ -6,18 +6,21 @@ type PageNavProps = {
   active: "posts" | "about";
 };
 
-// Shared heading styles to match h1 from globals.css
-const headingBase = "text-[2.625rem] font-extrabold leading-[1.3] tracking-normal max-[684px]:text-[2rem]";
+// Shared text styles to match h1 from globals.css
+const textBase = "text-[2.625rem] leading-[1.3] tracking-normal max-[684px]:text-[2rem]";
+const activeStyle = `${textBase} font-extrabold`;
+const inactiveStyle = `${textBase} font-normal transition-colors duration-200`;
+const separatorStyle = `${textBase} font-normal select-none`;
 
 export function PageNav({ active }: PageNavProps) {
   return (
-    <nav className="flex items-baseline gap-4 mb-6 mt-2">
+    <nav className="flex items-baseline justify-center mb-6 mt-2">
       {active === "posts" ? (
-        <h1 className={headingBase} style={{ color: "var(--ink)" }}>Posts</h1>
+        <span className={activeStyle} style={{ color: "var(--ink)" }}>Posts</span>
       ) : (
         <Link
           href="/"
-          className={`${headingBase} transition-colors duration-200`}
+          className={inactiveStyle}
           style={{ color: "var(--muted)" }}
           onMouseEnter={(e) => e.currentTarget.style.color = "#555555"}
           onMouseLeave={(e) => e.currentTarget.style.color = "var(--muted)"}
@@ -25,12 +28,15 @@ export function PageNav({ active }: PageNavProps) {
           Posts
         </Link>
       )}
+
+      <span className={separatorStyle} style={{ color: "var(--muted)" }}>&nbsp;|&nbsp;</span>
+
       {active === "about" ? (
-        <h1 className={headingBase} style={{ color: "var(--ink)" }}>About</h1>
+        <span className={activeStyle} style={{ color: "var(--ink)" }}>About</span>
       ) : (
         <Link
           href="/about"
-          className={`${headingBase} transition-colors duration-200`}
+          className={inactiveStyle}
           style={{ color: "var(--muted)" }}
           onMouseEnter={(e) => e.currentTarget.style.color = "#555555"}
           onMouseLeave={(e) => e.currentTarget.style.color = "var(--muted)"}

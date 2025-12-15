@@ -2,7 +2,7 @@
 title: Summary
 ---
 
-I'm Pranav Dhoolia, Founder @ [Godel](https://godel.sh). Based in Dover Heights, Sydney, Australia.
+I'm Pranav Dhoolia, Founder @ [Godel](https://godel.sh). Based in Sydney, Australia.
 
 I specialize in Large Language Models (LLMs), Generative AI, AI Integration, and Machine Learning.
 

@@ -6,7 +6,7 @@ tags: ["comfyui", "stable-diffusion", "diffusion-models", "artificial-intelligen
 draft: false
 ---
 
-In this article, I present an opiinonated open-source framework for diffusion based workflows, which includes running cloud inference, fine-tuning, and self-hosting - all through a simple and intuitive user interface. A rough draft of the initial problem space is here: https://blog.kizy.cloud/hypothesis
+In this article, I present an opinionated open-source framework for diffusion based workflows, which includes running cloud inference, fine-tuning, and self-hosting - all through a simple and intuitive user interface.
 
 **What is the problem we're solving?**
 
@@ -273,4 +273,4 @@ Currently, we have a deployed API to abstract out the individual processes of fi
 
 Phase 1: Implement v1 according to the described architecture (with a node based DAG graph orchestration plus a robust plugin system for BYO detailers, models etc.)
 
-Phase 2: Package our server as an MCP. This is a low-hanging fruit, but I believe this might add a lot of value to artists who are looking to define their creations or workflows in natural language, and then we can use the power of LLMs to formulate the best possible combination of models and effects to act on these definitions. This could theoretically make it simpler for users to consume our software (by simply adding a few MCP configs to their current desktop assistants.)
+Phase 2: Package our server as an MCP. This is a low-hanging fruit, but I believe this might add a lot of value to artists who are looking to define their creations or workflows in natural language, and then we can use the power of LLMs to formulate the best possible combination of models and effects to act on these definitions. This could theoretically make it simpler for users to consume our software (by simply adding a few MCP configs to their current desktop assistants).

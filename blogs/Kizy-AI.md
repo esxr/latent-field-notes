@@ -10,7 +10,7 @@ In this article, I present an opinionated open-source framework for diffusion ba
 
 **What is the problem we're solving?**
 
-There's an interesting gap in the current AI image generation landscape. On one end, you have powerful but complex tools like ComfyUI that demand technical fluency. On the other, hosted APIs that abstract everything away—but at the cost of flexibility and control. Artists without engineering backgrounds are often left choosing between a steep learning curve or a walled garden. This framework is an attempt to explore what a middle open-source self-hosted path might look like.
+There's an interesting gap in the current AI image generation landscape. On one end, you have powerful but complex tools like ComfyUI that demand technical fluency. On the other, hosted APIs that abstract everything away, but at the cost of flexibility and control. Artists without engineering backgrounds are often left choosing between a steep learning curve or a walled garden. This framework is an attempt to explore what a middle open-source self-hosted path might look like.
 
 We have consumer/prosumer grade products like ComfyUI, A111, Fooocus, etc that offer good control, but trade off on hardware or time. One the other, we have fully hosted cloud solutions like Replicate, Fal.AI. Then we have opinionated guides for deploying ComfyUI and similar WebUI's on runpod for better GPU provisioning. But it is to be noted that ComfyUI itself is not optimized for multi-gpu clusters.
 
@@ -140,7 +140,7 @@ I conducted around 10-15 interviews with people from the CivitAI, Stable Diffusi
 - Preferred API-based solutions (Replicate, fal.ai) for production work
 - Acknowledged that current tools assume too much technical knowledge
 - Expressed interest in self-hosted alternatives but cited "operational overhead" as a blocker
-- One noted: "The gap isn't in capability—it's in packaging"
+- One noted: "People need something nuanced but simple, and that is a hard problem to solve"
 
 The interviews confirmed some of my assumptions. Those who are well established in this space (i.e. have been doing this for a while and are also technically competent) often find it much easier to product high-quality AI art. But newcomers, and pure artists often find it difficult to get started. Also, the focus shifts from WHAT to HOW, with many of the artistic details getting lost in the technicalities. A slight proof towards that is the fact that almost every person I interviewed agreed that it takes multiple tries and generations to get their vision right, and luck often plays its part (as is expected from stochastic models).
 
@@ -170,7 +170,7 @@ In addition the system also offers a fine-tuning experience.
 ### Fine-tuning experience
 
 1. Upload images / videos, or a zip thereof
-2. Goal name, and description—for what the images and videos semantically imply
+2. Goal name, and description - for what the images and videos semantically imply
 
 As a result of the fine-tuning a LORA adapter is learnt, and is made available for selection in the generation experience.
 
@@ -255,7 +255,7 @@ graph TB
 
 ### Why This Design
 
-- **Reference-based data flow**: Control plane passes R2 URL references only—compute nodes fetch/upload directly. This reduces memory overhead by ~90%.
+- **Reference-based data flow**: Control plane passes R2 URL references only - compute nodes fetch/upload directly. This reduces memory overhead by ~90%.
 - **Per-node checkpointing**: Each node execution is checkpointed to R2, enabling automatic retry on failure without losing progress.
 - **Plugin extensibility**: Third-party nodes can be registered via `pyproject.toml` entry points, similar to how pytest plugins work.
 
@@ -263,7 +263,7 @@ graph TB
 
 ## Conclusion
 
-The first prototype of ![Kizy API v1](https://gist.github.com/esxr/ceea3e3a049a3e5c73ed05704436ad4d) has been deployed.
+The first prototype of [Kizy API v1](https://gist.github.com/esxr/ceea3e3a049a3e5c73ed05704436ad4d) has been deployed.
 
 Note that v0 is a bit different from the proposed architecture because we want a quick version for testing against real users. Right now, our framework is imperatively defined (i.e. no controls for using custom detailers, models etc.), and the exact workflow (prompt -> model -> detailers) is also hardcoded.
 

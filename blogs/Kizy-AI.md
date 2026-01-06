@@ -5,7 +5,6 @@ description: "A rough draft of the initial problem space is here: https://blog.k
 tags: ["comfyui", "stable-diffusion", "diffusion-models", "artificial-intelligence", "ai"]
 draft: false
 ---
-
 In this article, I present an opinionated open-source framework for diffusion based workflows, which includes running cloud inference, fine-tuning, and self-hosting - all through a simple and intuitive user interface.
 
 **What is the problem we're solving?**
@@ -263,7 +262,7 @@ graph TB
 
 ## Conclusion
 
-The first prototype of [Kizy API v1](https://gist.github.com/esxr/ceea3e3a049a3e5c73ed05704436ad4d) has been deployed.
+The first prototype of [Kizy API v1](https://kizy.cloud/docs/) has been deployed.
 
 Note that v0 is a bit different from the proposed architecture because we want a quick version for testing against real users. Right now, our framework is imperatively defined (i.e. no controls for using custom detailers, models etc.), and the exact workflow (prompt -> model -> detailers) is also hardcoded.
 

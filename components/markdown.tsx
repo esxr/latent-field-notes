@@ -112,9 +112,14 @@ export function Markdown({ content, stripFirstHeading = true }: MarkdownProps) {
         components={{
           pre({ children, ...props }) {
             const child = Array.isArray(children) ? children[0] : children;
-            const codeElement = React.isValidElement(child) ? child : null;
+            const codeElement = React.isValidElement<{
+              className?: string;
+              children?: React.ReactNode;
+            }>(child)
+              ? child
+              : null;
             const className =
-              codeElement && typeof codeElement.props?.className === "string"
+              codeElement && typeof codeElement.props.className === "string"
                 ? codeElement.props.className
                 : "";
             const isMermaid = className.includes("language-mermaid");
